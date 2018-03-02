@@ -1,0 +1,5 @@
+spring:
+  jpa:
+    show-sql: false
+    database-platform: com.mindata.blockchain.core.sqlite.SQLiteDialect
+    generate-ddl: true
