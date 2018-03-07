@@ -6,9 +6,9 @@ package com.mindata.blockchain.block;
  */
 public class Instruction {
     /**
-     * 指令的操作，增删改
+     * 指令的操作，增删改（0，1，2）
      */
-    private Operation operation;
+    private int operation;
     /**
      * 操作的model对象，对应一张表
      */
@@ -25,12 +25,20 @@ public class Instruction {
      * 操作人的公钥
      */
     private String publicKey;
+    /**
+     * 签名
+     */
+    private String sign;
+    /**
+     * 该操作的hash
+     */
+    private String hash;
 
-    public Operation getOperation() {
+    public int getOperation() {
         return operation;
     }
 
-    public void setOperation(Operation operation) {
+    public void setOperation(int operation) {
         this.operation = operation;
     }
 
@@ -66,6 +74,22 @@ public class Instruction {
         this.table = table;
     }
 
+    public String getSign() {
+        return sign;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
     @Override
     public String toString() {
         return "Instruction{" +
@@ -74,6 +98,8 @@ public class Instruction {
                 ", json='" + json + '\'' +
                 ", timeStamp=" + timeStamp +
                 ", publicKey='" + publicKey + '\'' +
+                ", sign='" + sign + '\'' +
+                ", hash='" + hash + '\'' +
                 '}';
     }
 }

@@ -31,6 +31,7 @@ import org.spongycastle.math.ec.FixedPointUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
@@ -40,13 +41,9 @@ import java.security.SecureRandom;
  * Date: Jul 26, 2017 5:17:04 PM <br/>
  *
  * @author Rony
- * @version
  * @since JDK 1.7
- * @see
  */
 public class ECDSAAlgorithm {
-
-
     public static final ECDomainParameters CURVE;
     public static final BigInteger HALF_CURVE_ORDER;
 
@@ -63,7 +60,7 @@ public class ECDSAAlgorithm {
         HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
     }
 
-    public static String generatePrivateKey() throws Exception {
+    public static String generatePrivateKey() {
         SecureRandom secureRandom;
         try {
             secureRandom = SecureRandom.getInstance(Constants.RANDOM_NUMBER_ALGORITHM,
@@ -75,8 +72,7 @@ public class ECDSAAlgorithm {
         byte[] privateKeyAttempt = new byte[32];
         secureRandom.nextBytes(privateKeyAttempt);
         BigInteger privateKeyCheck = new BigInteger(1, privateKeyAttempt);
-        while (privateKeyCheck.compareTo(BigInteger.ZERO) == 0 || privateKeyCheck.compareTo(Constants.MAXPRIVATEKEY)
-                == 1) {
+        while (privateKeyCheck.compareTo(BigInteger.ZERO) == 0 || privateKeyCheck.compareTo(Constants.MAXPRIVATEKEY) > 0) {
             secureRandom.nextBytes(privateKeyAttempt);
             privateKeyCheck = new BigInteger(1, privateKeyAttempt);
         }
@@ -85,9 +81,18 @@ public class ECDSAAlgorithm {
         return result;
     }
 
-    public static String generatePublicKey(String priateKeyBase64String, boolean encode) throws Exception {
+    /**
+     * 生成公钥，encode为true时为短公钥
+     * @param privateKeyBase64String
+     * 私钥
+     * @param encode
+     * 是否使用base64缩短
+     * @return
+     * 公钥
+     */
+    public static String generatePublicKey(String privateKeyBase64String, boolean encode) {
         try {
-            byte[] privateKeyBytes = Base64.decodeBase64(priateKeyBase64String);
+            byte[] privateKeyBytes = Base64.decodeBase64(privateKeyBase64String);
             ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256k1");
             ECPoint pointQ = spec.getG().multiply(new BigInteger(1, privateKeyBytes));
             String result = Base64.encodeBase64String(pointQ.getEncoded(encode));
@@ -98,11 +103,18 @@ public class ECDSAAlgorithm {
         }
     }
 
-    public static String generatePublicKey(String priateKeyBase64String) throws Exception {
-        return generatePublicKey(priateKeyBase64String, false);
+    /**
+     * 生成长公钥
+     * @param privateKeyBase64String
+     * 私钥
+     * @return
+     * 公钥
+     */
+    public static String generatePublicKey(String privateKeyBase64String) {
+        return generatePublicKey(privateKeyBase64String, false);
     }
 
-    public static String decodePublicKey(String encodePubKeyBase64String) throws Exception {
+    public static String decodePublicKey(String encodePubKeyBase64String) {
         try {
             byte[] encodePubkeyBytes = Base64.decodeBase64(encodePubKeyBase64String);
             ECNamedCurveParameterSpec spec = ECNamedCurveTable.getParameterSpec("secp256k1");
@@ -115,6 +127,46 @@ public class ECDSAAlgorithm {
         }
     }
 
+    /**
+     * 测试使用私钥签名，并使用公钥验证签名
+     */
+    public static void main(String[] args) throws Exception {
+        String priKey = generatePrivateKey();
+        System.out.println(priKey);
+        String pubKey = generatePublicKey(priKey, true);
+        String pubKey1 = generatePublicKey(priKey);
+        System.out.println(pubKey);
+        System.out.println(pubKey1);
+        String sign = sign(priKey, "abc");
+        System.out.println(sign);
+        boolean verify = verify("abc", sign, pubKey);
+        System.out.println(verify);
+    }
+
+    /**
+     * 根据公钥生成address
+     * @param publicKey
+     * 公钥
+     * @return
+     * Address
+     * @throws Exception
+     * exception
+     */
+    public static String getAddress(String publicKey) throws Exception {
+        return getAddress(publicKey.getBytes("UTF-8"), 0);
+    }
+
+    /**
+     * 根据公钥生成地址
+     * @param keyBytes
+     * 公钥
+     * @param version
+     * 版本，可以不用
+     * @return
+     * address
+     * @throws Exception
+     * exception
+     */
     public static String getAddress(byte[] keyBytes, int... version) throws Exception {
         byte[] hashSha256 = BaseAlgorithm.encode("SHA-256", keyBytes);
         MessageDigest messageDigest = MessageDigest.getInstance("RipeMD160");
@@ -140,7 +192,11 @@ public class ECDSAAlgorithm {
         return Base58Algorithm.encode(rawAddr);
     }
 
-    public static String sign(String privateKey, byte[] data) throws Exception {
+    public static String sign(String privateKey, String data) throws UnsupportedEncodingException {
+        return sign(privateKey, data.getBytes("UTF-8"));
+    }
+
+    public static String sign(String privateKey, byte[] data) {
         byte[] hash256 = BaseAlgorithm.encode("SHA-256", data);
         ECDSASigner signer = new ECDSASigner(new HMacDSAKCalculator(new SHA256Digest()));
         BigInteger pri = new BigInteger(1, Base64.decodeBase64(privateKey));
@@ -153,6 +209,19 @@ public class ECDSAAlgorithm {
         return result;
     }
 
+    /**
+     * 根据公钥验证签名是否合法
+     * @param srcStr
+     * 明文字符串
+     * @param sign
+     * 用私钥签过名的sign
+     * @param pubKey
+     * 公钥
+     * @return
+     * 是否校验通过
+     * @throws Exception
+     * Exception
+     */
     public static boolean verify(String srcStr, String sign, String pubKey) throws Exception {
         byte[] hash256 = BaseAlgorithm.encode("SHA-256", srcStr.getBytes("UTF-8"));
         ECDSASignature eCDSASignature = ECDSASignature.decodeFromDER(Base64.decodeBase64(sign));
@@ -223,7 +292,8 @@ public class ECDSAAlgorithm {
             try {
                 return derByteStream().toByteArray();
             } catch (IOException e) {
-                throw new RuntimeException(e); // Cannot happen.
+                // Cannot happen.
+                throw new RuntimeException(e);
             }
         }
 

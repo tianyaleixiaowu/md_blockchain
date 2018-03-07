@@ -1,6 +1,6 @@
 package com.mindata.blockchain.core.model;
 
-import com.mindata.blockchain.core.model.basebase.BaseEntity;
+import com.mindata.blockchain.core.model.base.BaseEntity;
 
 import javax.persistence.*;
 

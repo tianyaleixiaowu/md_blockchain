@@ -16,6 +16,8 @@ import com.mindata.blockchain.block.PairKey;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * ClassName:TrustSDK <br/>
  * Date: Jul 26, 2017 10:30:31 AM <br/>
@@ -26,7 +28,7 @@ import org.springframework.util.StringUtils;
 public class TrustSDK {
 
 	/**
-	 * generatePariKey:产生一对公私钥, 并返回. <br/>
+	 * generatePairKey:产生一对公私钥, 并返回. <br/>
 	 * 
 	 * @author Rony
 	 * @return 返回公私钥对
@@ -39,7 +41,7 @@ public class TrustSDK {
 	}
 	
 	/**
-	 * generatePairKey:(这里用一句话描述这个方法的作用). <br/>
+	 * generatePairKey:生成私钥公钥对. <br/>
 	 *
 	 * @author ronyyang
 	 * @param encodePubKey  是否压缩
@@ -76,12 +78,9 @@ public class TrustSDK {
 			throw new TrustSDKException(ErrorNum.INVALID_PARAM_ERROR.getRetCode(), ErrorNum.INVALID_PARAM_ERROR.getRetMsg());
 		}
 		try {
-			String correctPubKey = ECDSAAlgorithm.generatePublicKey(prvKey.trim());
-			if(pubKey.trim().equals(correctPubKey)) {
-				return true;
-			}
-			return false;
-		} catch(Exception e) {
+			String correctPubKey = ECDSAAlgorithm.generatePublicKey(prvKey.trim(), true);
+            return pubKey.trim().equals(correctPubKey);
+        } catch(Exception e) {
 			throw new TrustSDKException(ErrorNum.ECDSA_ENCRYPT_ERROR.getRetCode(), ErrorNum.ECDSA_ENCRYPT_ERROR.getRetMsg(), e);
 		}
 	}
@@ -200,6 +199,10 @@ public class TrustSDK {
 		} catch (Exception e) {
 			throw new TrustSDKException(ErrorNum.SIGN_ERROR.getRetCode(), ErrorNum.SIGN_ERROR.getRetMsg(), e);
 		}
+	}
+
+	public static String signString(String privateKey, String data) throws TrustSDKException, UnsupportedEncodingException {
+		return signString(privateKey, data.getBytes("UTF-8"));
 	}
 
 	/**

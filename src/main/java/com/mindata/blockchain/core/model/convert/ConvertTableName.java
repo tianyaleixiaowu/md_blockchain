@@ -1,6 +1,6 @@
 package com.mindata.blockchain.core.model.convert;
 
-import com.mindata.blockchain.core.model.basebase.BaseEntity;
+import com.mindata.blockchain.core.model.base.BaseEntity;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
