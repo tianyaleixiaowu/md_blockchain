@@ -2,6 +2,7 @@ package com.mindata.blockchain.core.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.mindata.blockchain.block.Instruction;
+import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.common.Sha256;
 import com.mindata.blockchain.common.TrustSDK;
 import com.mindata.blockchain.common.exception.TrustSDKException;
@@ -24,9 +25,7 @@ public class InstructionService {
      * @throws TrustSDKException
      *         TrustSDKException
      */
-    public boolean checkKeys(InstructionBody instructionBody) throws TrustSDKException {
-        instructionBody.setPrivateKey(instructionBody.getPrivateKey().replace(" ", "+"));
-        instructionBody.setPublicKey(instructionBody.getPublicKey().replace(" ", "+"));
+    public boolean checkKeyPair(InstructionBody instructionBody) throws TrustSDKException {
         return TrustSDK.checkPairKey(instructionBody.getPrivateKey(), instructionBody.getPublicKey());
     }
 
@@ -40,8 +39,7 @@ public class InstructionService {
     public Instruction build(InstructionBody instructionBody) throws Exception {
         Instruction instruction = new Instruction();
         BeanUtil.copyProperties(instructionBody, instruction);
-        Long time = System.currentTimeMillis();
-        instruction.setTimeStamp(time);
+        instruction.setTimeStamp(CommonUtil.getNow());
         String buildStr = instructionBody.getOperation() + instructionBody.getTable() + instructionBody.getJson();
         //设置签名，供其他人验证
         instruction.setSign(TrustSDK.signString(instructionBody.getPrivateKey(), buildStr));
@@ -51,4 +49,15 @@ public class InstructionService {
         return instruction;
     }
 
+    public boolean checkSign(Instruction instruction) throws TrustSDKException {
+        String buildStr = instruction.getOperation() +
+                instruction.getTable() + instruction.getJson();
+        return TrustSDK.verifyString(instruction.getPublicKey(), buildStr, instruction.getSign());
+    }
+
+    public boolean checkHash(Instruction instruction) {
+        String buildStr = instruction.getOperation() +
+                instruction.getTable() + instruction.getJson();
+        return Sha256.sha256(buildStr).equals(instruction.getHash());
+    }
 }

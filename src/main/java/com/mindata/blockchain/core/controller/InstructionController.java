@@ -5,6 +5,7 @@ import com.mindata.blockchain.core.bean.ResultGenerator;
 import com.mindata.blockchain.core.requestbody.InstructionBody;
 import com.mindata.blockchain.core.service.InstructionService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +28,8 @@ public class InstructionController {
      * 用私钥签名后的指令
      */
     @PostMapping
-    public BaseData build(InstructionBody instructionBody) throws Exception {
-        if (!instructionService.checkKeys(instructionBody)) {
+    public BaseData build(@RequestBody InstructionBody instructionBody) throws Exception {
+        if (!instructionService.checkKeyPair(instructionBody)) {
              return ResultGenerator.genFailResult("公私钥不是一对");
         }
         return ResultGenerator.genSuccessResult(instructionService.build(instructionBody));

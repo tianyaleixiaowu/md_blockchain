@@ -20,9 +20,9 @@ public class BlockHeader {
      */
     private String hashMerkleRoot;
     /**
-     * 生成该区块的账号地址
+     * 生成该区块的公钥
      */
-    private CoinBase coinbase;
+    private String publicKey;
     /**
      * 区块的序号
      */
@@ -46,7 +46,7 @@ public class BlockHeader {
                 "version=" + version +
                 ", hashPreviousBlock='" + hashPreviousBlock + '\'' +
                 ", hashMerkleRoot='" + hashMerkleRoot + '\'' +
-                ", coinbase=" + coinbase +
+                ", publicKey=" + publicKey +
                 ", number=" + number +
                 ", timeStamp=" + timeStamp +
                 ", nonce=" + nonce +
@@ -78,12 +78,12 @@ public class BlockHeader {
         this.hashMerkleRoot = hashMerkleRoot;
     }
 
-    public CoinBase getCoinbase() {
-        return coinbase;
+    public String getPublicKey() {
+        return publicKey;
     }
 
-    public void setCoinbase(CoinBase coinbase) {
-        this.coinbase = coinbase;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     public int getNumber() {

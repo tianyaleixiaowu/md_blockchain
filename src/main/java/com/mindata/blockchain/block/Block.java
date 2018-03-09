@@ -1,5 +1,7 @@
 package com.mindata.blockchain.block;
 
+import cn.hutool.crypto.digest.DigestUtil;
+
 /**
  * 区块
  * @author wuweifeng wrote on 2018/2/27.
@@ -17,21 +19,39 @@ public class Block {
      * 该区块的hash
      */
     private String hash;
-    /**
-     * 区块大小
-     */
-    private int size;
-
 
     /**
      * 根据该区块所有属性计算sha256
      * @return
      * sha256hex
      */
-    //private String calculateHash() {
-    //    return DigestUtil.sha256Hex(
-    //                    body
-    //    );
-    //}
+    private String calculateHash() {
+        return DigestUtil.sha256Hex(
+                        blockHeader.toString() + blockBody.toString()
+        );
+    }
 
+    public BlockHeader getBlockHeader() {
+        return blockHeader;
+    }
+
+    public void setBlockHeader(BlockHeader blockHeader) {
+        this.blockHeader = blockHeader;
+    }
+
+    public BlockBody getBlockBody() {
+        return blockBody;
+    }
+
+    public void setBlockBody(BlockBody blockBody) {
+        this.blockBody = blockBody;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
 }

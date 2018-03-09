@@ -3,3 +3,6 @@ spring:
     show-sql: false
     database-platform: com.mindata.blockchain.core.sqlite.SQLiteDialect
     generate-ddl: true
+sqlite:
+  dbName: a.db  #本地sqlite的名字
+version: 1
