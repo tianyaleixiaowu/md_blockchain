@@ -4,6 +4,7 @@ import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.socket.body.GenerateBlockBody;
 import com.mindata.blockchain.socket.common.Const;
 import com.mindata.blockchain.socket.packet.BlockPacket;
+import com.mindata.blockchain.socket.packet.PacketBuilder;
 import com.mindata.blockchain.socket.packet.PacketType;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -13,7 +14,6 @@ import org.tio.client.ClientChannelContext;
 import org.tio.client.ClientGroupContext;
 import org.tio.core.Aio;
 import org.tio.core.Node;
-import org.tio.utils.json.Json;
 
 import javax.annotation.Resource;
 
@@ -45,13 +45,16 @@ public class BlockClientStarter {
     }
 
     private void send() throws Exception {
-        BlockPacket packet = new BlockPacket();
         Block block = new Block();
         block.setHash("123456");
-        packet.setType(PacketType.GENERATE_BLOCK_COMPLETE);
 
-        packet.setBody(Json.toJson(new GenerateBlockBody(Json.toJson(block))).getBytes(Const.CHARSET));
+        BlockPacket packet = new PacketBuilder<GenerateBlockBody>()
+                .setType(PacketType.GENERATE_BLOCK_COMPLETE)
+                .setBody(new GenerateBlockBody(block)).build();
+
+        //发送到某一个server
         //Aio.send(clientChannelContext, packet);
+        //发送到一个group
         Aio.sendToGroup(clientGroupContext, GROUP_NAME, packet);
     }
 }

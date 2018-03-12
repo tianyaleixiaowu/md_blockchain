@@ -24,7 +24,7 @@ public class LastBlockInfoResponseHandler extends AbstractBlockHandler<GenerateB
     @Override
     public Object handler(BlockPacket packet, GenerateBlockBody generateBlockBody, ChannelContext channelContext) throws Exception {
         logger.info("收到<请求生成Block的回应>消息", Json.toJson(generateBlockBody));
-        Block block = Json.toBean(generateBlockBody.getBlockJson(), Block.class);
+        Block block = generateBlockBody.getBlock();
 
         //TODO check合法性
         //TODO response

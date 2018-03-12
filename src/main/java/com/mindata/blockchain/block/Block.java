@@ -54,4 +54,13 @@ public class Block {
     public void setHash(String hash) {
         this.hash = hash;
     }
+
+    @Override
+    public String toString() {
+        return "Block{" +
+                "blockHeader=" + blockHeader +
+                ", blockBody=" + blockBody +
+                ", hash='" + hash + '\'' +
+                '}';
+    }
 }

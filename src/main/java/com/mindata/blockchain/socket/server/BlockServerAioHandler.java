@@ -38,11 +38,11 @@ public class BlockServerAioHandler extends AbstractAioHandler implements ServerA
     public void handler(Packet packet, ChannelContext channelContext) throws Exception {
         BlockPacket blockPacket = (BlockPacket) packet;
         Byte type = blockPacket.getType();
-        AbstractBlockHandler<?> showcaseBsHandler = handlerMap.get(type);
-        if (showcaseBsHandler == null) {
+        AbstractBlockHandler<?> handler = handlerMap.get(type);
+        if (handler == null) {
             log.error("{}, 找不到处理类，type:{}", channelContext, type);
             return;
         }
-        showcaseBsHandler.handler(blockPacket, channelContext);
+        handler.handler(blockPacket, channelContext);
     }
 }

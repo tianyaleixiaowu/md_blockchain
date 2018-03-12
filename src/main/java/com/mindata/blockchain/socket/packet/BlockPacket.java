@@ -1,6 +1,9 @@
 package com.mindata.blockchain.socket.packet;
 
+import com.mindata.blockchain.socket.common.Const;
 import org.tio.core.intf.Packet;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author wuweifeng wrote on 2018/3/9.
@@ -33,6 +36,12 @@ public class BlockPacket extends Packet {
         this.body = body;
     }
 
+    public BlockPacket(byte type, String body) {
+        super();
+        this.type = type;
+        setBody(body);
+    }
+
     /**
      * @return the body
      */
@@ -58,6 +67,14 @@ public class BlockPacket extends Packet {
      */
     public void setBody(byte[] body) {
         this.body = body;
+    }
+
+    public void setBody(String body) {
+        try {
+            this.body = body.getBytes(Const.CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

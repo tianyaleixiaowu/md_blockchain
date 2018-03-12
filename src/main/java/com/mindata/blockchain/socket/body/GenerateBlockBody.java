@@ -1,5 +1,7 @@
 package com.mindata.blockchain.socket.body;
 
+import com.mindata.blockchain.block.Block;
+
 /**
  * @author wuweifeng wrote on 2018/3/12.
  */
@@ -7,20 +9,27 @@ public class GenerateBlockBody extends BaseBody {
     /**
      * blockJson
      */
-    private String blockJson;
+    private Block block;
 
     public GenerateBlockBody() {
     }
 
-    public GenerateBlockBody(String blockJson) {
-        this.blockJson = blockJson;
+    public GenerateBlockBody(Block block) {
+        this.block = block;
     }
 
-    public String getBlockJson() {
-        return blockJson;
+    public Block getBlock() {
+        return block;
     }
 
-    public void setBlockJson(String blockJson) {
-        this.blockJson = blockJson;
+    public void setBlock(Block block) {
+        this.block = block;
+    }
+
+    @Override
+    public String toString() {
+        return "GenerateBlockBody{" +
+                "block=" + block +
+                '}';
     }
 }

@@ -1,6 +1,5 @@
 package com.mindata.blockchain.socket.handler;
 
-import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.GenerateBlockBody;
 import com.mindata.blockchain.socket.packet.BlockPacket;
@@ -24,7 +23,6 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<GenerateBl
     @Override
     public Object handler(BlockPacket packet, GenerateBlockBody generateBlockBody, ChannelContext channelContext) throws Exception {
         logger.info("收到<生成Block>请求消息", Json.toJson(generateBlockBody));
-        Block block = Json.toBean(generateBlockBody.getBlockJson(), Block.class);
 
         //TODO check合法性
         //TODO response
