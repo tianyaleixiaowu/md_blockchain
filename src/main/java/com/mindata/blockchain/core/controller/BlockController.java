@@ -5,10 +5,8 @@ import com.mindata.blockchain.core.bean.BaseData;
 import com.mindata.blockchain.core.bean.ResultGenerator;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
 import com.mindata.blockchain.core.service.BlockService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.mindata.blockchain.socket.client.BlockClientStarter;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -20,6 +18,8 @@ import javax.annotation.Resource;
 public class BlockController {
     @Resource
     private BlockService blockService;
+    @Resource
+    private BlockClientStarter blockClientStarter;
 
     /**
      * 添加一个block
@@ -32,5 +32,12 @@ public class BlockController {
             return ResultGenerator.genFailResult(blockService.check(blockRequestBody));
         }
         return ResultGenerator.genSuccessResult(blockService.addBlock(blockRequestBody));
+    }
+
+    @GetMapping
+    public BaseData test() throws Exception {
+        blockClientStarter.send();
+
+        return null;
     }
 }

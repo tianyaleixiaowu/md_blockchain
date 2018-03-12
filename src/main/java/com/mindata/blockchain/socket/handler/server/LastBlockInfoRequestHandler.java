@@ -1,4 +1,4 @@
-package com.mindata.blockchain.socket.handler;
+package com.mindata.blockchain.socket.handler.server;
 
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.GenerateBlockBody;
@@ -9,11 +9,11 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.json.Json;
 
 /**
- * 请求生成区块，全网广播，等待大家校验回应
+ * 请求别人获取最后一个区块的信息
  * @author wuweifeng wrote on 2018/3/12.
  */
-public class GenerateBlockRequestHandler extends AbstractBlockHandler<GenerateBlockBody> {
-    private Logger logger = LoggerFactory.getLogger(GenerateBlockRequestHandler.class);
+public class LastBlockInfoRequestHandler extends AbstractBlockHandler<GenerateBlockBody> {
+    private Logger logger = LoggerFactory.getLogger(LastBlockInfoRequestHandler.class);
 
     @Override
     public Class<GenerateBlockBody> bodyClass() {
@@ -22,7 +22,7 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<GenerateBl
 
     @Override
     public Object handler(BlockPacket packet, GenerateBlockBody generateBlockBody, ChannelContext channelContext) throws Exception {
-        logger.info("收到<生成Block>请求消息", Json.toJson(generateBlockBody));
+        logger.info("收到<请求生成Block的回应>消息", Json.toJson(generateBlockBody));
 
         //TODO check合法性
         //TODO response

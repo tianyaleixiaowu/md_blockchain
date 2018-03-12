@@ -1,4 +1,4 @@
-package com.mindata.blockchain.socket.handler;
+package com.mindata.blockchain.socket.handler.server;
 
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.GenerateBlockBody;
@@ -9,11 +9,11 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.json.Json;
 
 /**
- * 对别人请求生成区块的回应
+ * 获取全部区块信息的请求，全网广播
  * @author wuweifeng wrote on 2018/3/12.
  */
-public class GenerateBlockResponseHandler extends AbstractBlockHandler<GenerateBlockBody> {
-    private Logger logger = LoggerFactory.getLogger(GenerateBlockResponseHandler.class);
+public class TotalBlockInfoRequestHandler extends AbstractBlockHandler<GenerateBlockBody> {
+    private Logger logger = LoggerFactory.getLogger(TotalBlockInfoRequestHandler.class);
 
     @Override
     public Class<GenerateBlockBody> bodyClass() {

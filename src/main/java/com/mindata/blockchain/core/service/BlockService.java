@@ -11,6 +11,7 @@ import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.common.Sha256;
 import com.mindata.blockchain.common.exception.TrustSDKException;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
+import com.mindata.blockchain.socket.client.BlockClientStarter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -60,6 +61,7 @@ public class BlockService {
 
         return null;
     }
+
 
     public Block addBlock(BlockRequestBody blockRequestBody) {
         Block block = new Block();

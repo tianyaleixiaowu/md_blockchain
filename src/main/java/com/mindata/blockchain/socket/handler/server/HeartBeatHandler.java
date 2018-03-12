@@ -1,4 +1,4 @@
-package com.mindata.blockchain.socket.handler;
+package com.mindata.blockchain.socket.handler.server;
 
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.HeartBeatBody;
@@ -21,7 +21,7 @@ public class HeartBeatHandler extends AbstractBlockHandler<HeartBeatBody> {
 
     @Override
     public Object handler(BlockPacket packet, HeartBeatBody heartBeatBody, ChannelContext channelContext) throws Exception {
-        logger.info("收到<心跳包>消息", heartBeatBody.getText());
+        logger.info("收到<心跳包>消息", heartBeatBody.getText(), "来自于：" + heartBeatBody.getUserId());
 
         return null;
     }

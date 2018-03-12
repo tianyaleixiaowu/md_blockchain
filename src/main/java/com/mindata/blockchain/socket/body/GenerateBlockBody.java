@@ -12,9 +12,11 @@ public class GenerateBlockBody extends BaseBody {
     private Block block;
 
     public GenerateBlockBody() {
+        super();
     }
 
     public GenerateBlockBody(Block block) {
+        super();
         this.block = block;
     }
 

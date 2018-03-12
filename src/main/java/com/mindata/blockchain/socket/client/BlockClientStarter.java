@@ -40,16 +40,14 @@ public class BlockClientStarter {
         ClientChannelContext clientChannelContext = aioClient.connect(serverNode);
         //绑group是将要连接的各个服务器节点做为一个group
         Aio.bindGroup(clientChannelContext, GROUP_NAME);
-        //连上后，发条消息玩玩
-        send();
     }
 
-    private void send() throws Exception {
+    public void send() throws Exception {
         Block block = new Block();
         block.setHash("123456");
 
         BlockPacket packet = new PacketBuilder<GenerateBlockBody>()
-                .setType(PacketType.GENERATE_BLOCK_COMPLETE)
+                .setType(PacketType.GENERATE_BLOCK_REQUEST)
                 .setBody(new GenerateBlockBody(block)).build();
 
         //发送到某一个server

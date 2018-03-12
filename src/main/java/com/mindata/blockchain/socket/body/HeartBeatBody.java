@@ -10,9 +10,11 @@ public class HeartBeatBody extends BaseBody {
     private String text;
 
     public HeartBeatBody() {
+        super();
     }
 
     public HeartBeatBody(String text) {
+        super();
         this.text = text;
     }
 

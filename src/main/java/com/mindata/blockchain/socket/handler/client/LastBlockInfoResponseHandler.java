@@ -1,4 +1,4 @@
-package com.mindata.blockchain.socket.handler;
+package com.mindata.blockchain.socket.handler.client;
 
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
