@@ -1,0 +1,26 @@
+package com.mindata.blockchain.socket.body;
+
+/**
+ * @author wuweifeng wrote on 2018/3/12.
+ */
+public class HeartBeatBody extends BaseBody {
+    /**
+     * text
+     */
+    private String text;
+
+    public HeartBeatBody() {
+    }
+
+    public HeartBeatBody(String text) {
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+}
