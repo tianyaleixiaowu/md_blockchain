@@ -8,7 +8,7 @@ public class Instruction {
     /**
      * 指令的操作，增删改（0，1，2）
      */
-    private int operation;
+    private byte operation;
     /**
      * 操作的model对象，对应一张表
      */
@@ -34,11 +34,11 @@ public class Instruction {
      */
     private String hash;
 
-    public int getOperation() {
+    public byte getOperation() {
         return operation;
     }
 
-    public void setOperation(int operation) {
+    public void setOperation(byte operation) {
         this.operation = operation;
     }
 

@@ -21,7 +21,7 @@ public class HeartBeatHandler extends AbstractBlockHandler<HeartBeatBody> {
 
     @Override
     public Object handler(BlockPacket packet, HeartBeatBody heartBeatBody, ChannelContext channelContext) throws Exception {
-        logger.info("收到<心跳包>消息", heartBeatBody.getText(), "来自于：" + heartBeatBody.getUserId());
+        logger.info("收到<心跳包>消息", heartBeatBody.getText());
 
         return null;
     }

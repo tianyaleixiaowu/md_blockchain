@@ -6,9 +6,9 @@ package com.mindata.blockchain.socket.body;
  */
 public class CheckBlockBody extends BaseBody {
     /**
-     * 是否OK
+     * 0是正常同意，-1区块number错误，-2没有权限，-3hash错误，-4时间错误
      */
-    private boolean ok;
+    private int code;
     /**
      * 附带的message
      */
@@ -17,17 +17,17 @@ public class CheckBlockBody extends BaseBody {
     public CheckBlockBody() {
     }
 
-    public CheckBlockBody(boolean ok, String message) {
-        this.ok = ok;
+    public CheckBlockBody(int code, String message) {
+        this.code = code;
         this.message = message;
     }
 
-    public boolean isOk() {
-        return ok;
+    public int getCode() {
+        return code;
     }
 
-    public void setOk(boolean ok) {
-        this.ok = ok;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMessage() {
@@ -41,7 +41,7 @@ public class CheckBlockBody extends BaseBody {
     @Override
     public String toString() {
         return "CheckBlockBody{" +
-                "ok=" + ok +
+                "code=" + code +
                 ", message='" + message + '\'' +
                 '}';
     }

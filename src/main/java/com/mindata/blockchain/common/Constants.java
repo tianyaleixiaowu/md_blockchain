@@ -13,26 +13,31 @@ import java.math.BigInteger;
 
 /**
  * ClassName:Constants <br/>
- * Date:     Jul 26, 2017 11:17:18 AM <br/>
- * @author   Rony
- * @version  
- * @since    JDK 1.7
- * @see 	 
+ * @author   wuweifeng
  */
-public class Constants {
+public interface Constants {
 	
-	public static final int PUBKEY_DIGEST_LENGTH = 90; // public key length
-	public static final int PRVKEY_DIGEST_LENGTH = 45; //private key length
-	public static final int ADDR_DIGEST_LENGTH = 35;   // address length
-	public static final int SIGN_DIGEST_LENGTH = 98;   // signature length
-	public static final int KEY_DES3_DIGEST_LENGTH = 24;  // max size of key for DES3 encrypt
-	public static final int KEY_AES128_DIGEST_LENGTH = 16; // max size of key for AES128 encrypt
-	public static final int TRANSSQL_DIGEST_LENGTH = 8192; // max size of trans sql for TrustSQL
+	int PUBKEY_DIGEST_LENGTH = 90; // public key length
+	int PRVKEY_DIGEST_LENGTH = 45; //private key length
+	int ADDR_DIGEST_LENGTH = 35;   // address length
+	int SIGN_DIGEST_LENGTH = 98;   // signature length
+	int KEY_DES3_DIGEST_LENGTH = 24;  // max size of key for DES3 encrypt
+	int KEY_AES128_DIGEST_LENGTH = 16; // max size of key for AES128 encrypt
+	int TRANSSQL_DIGEST_LENGTH = 8192; // max size of trans sql for TrustSQL
 	
-	public static final String RANDOM_NUMBER_ALGORITHM = "SHA1PRNG";
-	public static final String RANDOM_NUMBER_ALGORITHM_PROVIDER = "SUN";
-	public static final BigInteger MAXPRIVATEKEY = new BigInteger("00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364140", 16);
+	String RANDOM_NUMBER_ALGORITHM = "SHA1PRNG";
+	String RANDOM_NUMBER_ALGORITHM_PROVIDER = "SUN";
+	BigInteger MAXPRIVATEKEY = new BigInteger("00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364140", 16);
 
-	public static final String INFO_SHARE_PUBKEY = "BC8s/4qEAvVl4Sv0LwQOWJcVU6Q5hBd+7LlJeEivVmUbdtwP4RTfN8x/G+muMhN8SrweyyVVMIcIrnMWoFqGfIA=";
+	String INFO_SHARE_PUBKEY = "BC8s/4qEAvVl4Sv0LwQOWJcVU6Q5hBd+7LlJeEivVmUbdtwP4RTfN8x/G+muMhN8SrweyyVVMIcIrnMWoFqGfIA=";
+
+	/**
+	 * 最后一个区块hash的key，value就是最后一个区块的hash
+	 */
+	String KEY_LAST_BLOCK = "key_last_block";
+	/**
+	 * 区块hash与区块本身的key value映射，key的前缀，如{key_block_xxxxxxx -> blockJson}
+	 */
+	String KEY_BLOCK_HASH_PREFIX = "key_block_";
 }
 

@@ -11,7 +11,11 @@ import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.common.Sha256;
 import com.mindata.blockchain.common.exception.TrustSDKException;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
-import com.mindata.blockchain.socket.client.BlockClientStarter;
+import com.mindata.blockchain.socket.body.GenerateBlockBody;
+import com.mindata.blockchain.socket.client.PacketSender;
+import com.mindata.blockchain.socket.packet.BlockPacket;
+import com.mindata.blockchain.socket.packet.PacketBuilder;
+import com.mindata.blockchain.socket.packet.PacketType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +32,8 @@ public class BlockService {
     private InstructionService instructionService;
     @Value("${version}")
     private int version;
+    @Resource
+    private PacketSender packetSender;
 
     /**
      * 校验指令集是否合法
@@ -62,7 +68,11 @@ public class BlockService {
         return null;
     }
 
-
+    /**
+     * 添加新的区块
+     * @param blockRequestBody blockRequestBody
+     * @return Block
+     */
     public Block addBlock(BlockRequestBody blockRequestBody) {
         Block block = new Block();
         BlockHeader blockHeader = new BlockHeader();
@@ -79,7 +89,12 @@ public class BlockService {
         block.setBlockBody(blockBody);
         block.setHash(Sha256.sha256(blockHeader.toString() + blockBody.toString()));
 
+        BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_REQUEST).setBody(new
+                GenerateBlockBody(block)).build();
+
+
         //TODO 广播给其他人做验证
+        packetSender.sendGroup(blockPacket);
 
         return block;
     }

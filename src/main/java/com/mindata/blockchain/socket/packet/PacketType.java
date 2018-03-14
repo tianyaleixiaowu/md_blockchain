@@ -19,7 +19,7 @@ public interface PacketType {
     /**
      * 同意、拒绝生成
      */
-    byte GENERATE_BLOCK_REPONSE = -2;
+    byte GENERATE_BLOCK_RESPONSE = -2;
     /**
      * 获取所有block信息
      */
@@ -27,7 +27,7 @@ public interface PacketType {
     /**
      * 我的所有块信息
      */
-    byte TOTAL_BLOCK_INFO_REPONSE = -3;
+    byte TOTAL_BLOCK_INFO_RESPONSE = -3;
     /**
      * 获取最后一个block信息
      */
@@ -35,5 +35,5 @@ public interface PacketType {
     /**
      * 我的最后一块信息
      */
-    byte LAST_BLOCK_INFO_REPONSE = -4;
+    byte LAST_BLOCK_INFO_RESPONSE = -4;
 }

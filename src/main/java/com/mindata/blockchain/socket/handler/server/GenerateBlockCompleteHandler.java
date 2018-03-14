@@ -5,7 +5,6 @@ import com.mindata.blockchain.socket.body.GenerateBlockBody;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.utils.json.Json;
 
@@ -28,7 +27,6 @@ public class GenerateBlockCompleteHandler extends AbstractBlockHandler<GenerateB
         //TODO check合法性
         //TODO response
 
-        Aio.sendToUser(channelContext.getGroupContext(), generateBlockBody.getUserId(), packet);
         return null;
     }
 }

@@ -72,6 +72,13 @@
 			<version>2.0.1.v20171015-RELEASE</version>
 		</dependency>
         <!--t-io end-->
+        <!--rocksdb start-->
+		<dependency>
+			<groupId>org.rocksdb</groupId>
+			<artifactId>rocksdbjni</artifactId>
+			<version>5.10.3</version>
+		</dependency>
+        <!--rocksdb end-->
         <dependency>
             <groupId>com.madgag.spongycastle</groupId>
             <artifactId>core</artifactId>

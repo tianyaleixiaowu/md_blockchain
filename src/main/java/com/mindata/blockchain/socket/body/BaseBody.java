@@ -1,5 +1,7 @@
 package com.mindata.blockchain.socket.body;
 
+import java.util.UUID;
+
 /**
  *
  * @author tanyaowu
@@ -12,19 +14,15 @@ public class BaseBody {
 	 */
 	private Long time = System.currentTimeMillis();
     /**
-     * userId
+     * 每条消息的唯一id
      */
-	private String userId = "userId_1";
+	private String messageId = UUID.randomUUID().toString();
+    /**
+     * 回复的哪条消息
+     */
+	private String responseMsgId;
 
     public BaseBody() {
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 
     /**
@@ -41,11 +39,28 @@ public class BaseBody {
 		this.time = time;
 	}
 
+	public String getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
+	}
+
+    public String getResponseMsgId() {
+        return responseMsgId;
+    }
+
+    public void setResponseMsgId(String responseMsgId) {
+        this.responseMsgId = responseMsgId;
+    }
+
     @Override
     public String toString() {
         return "BaseBody{" +
                 "time=" + time +
-                ", userId='" + userId + '\'' +
+                ", messageId='" + messageId + '\'' +
+                ", responseMsgId='" + responseMsgId + '\'' +
                 '}';
     }
 }

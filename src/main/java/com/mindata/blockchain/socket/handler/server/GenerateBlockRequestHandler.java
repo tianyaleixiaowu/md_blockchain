@@ -1,5 +1,7 @@
 package com.mindata.blockchain.socket.handler.server;
 
+import com.mindata.blockchain.ApplicationContextProvider;
+import com.mindata.blockchain.block.check.CheckerManager;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.CheckBlockBody;
 import com.mindata.blockchain.socket.body.GenerateBlockBody;
@@ -10,14 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
-import org.tio.utils.json.Json;
 
 /**
  * 请求生成区块，全网广播，等待大家校验回应
+ *
  * @author wuweifeng wrote on 2018/3/12.
  */
 public class GenerateBlockRequestHandler extends AbstractBlockHandler<GenerateBlockBody> {
     private Logger logger = LoggerFactory.getLogger(GenerateBlockRequestHandler.class);
+
 
     @Override
     public Class<GenerateBlockBody> bodyClass() {
@@ -25,15 +28,16 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<GenerateBl
     }
 
     @Override
-    public Object handler(BlockPacket packet, GenerateBlockBody generateBlockBody, ChannelContext channelContext) throws Exception {
-        logger.info("收到<生成Block>请求消息", Json.toJson(generateBlockBody));
+    public Object handler(BlockPacket packet, GenerateBlockBody generateBlockBody, ChannelContext channelContext)
+            throws Exception {
+        logger.info("收到<生成Block>请求消息，消息id为：" + packet.getId() + "，block信息为[" + generateBlockBody.getBlock() + "]");
 
-        //TODO check合法性
-        //TODO response
+        CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);
+        CheckBlockBody checkerResult = checkerManager.check(generateBlockBody.getBlock());
 
         //返回同意、拒绝的响应
-        BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_REPONSE).setBody(new
-                CheckBlockBody(true, "同意")).build();
+        BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_RESPONSE).setBody
+                (checkerResult).setRespId(packet.getId()).build();
         Aio.send(channelContext, blockPacket);
 
         return null;

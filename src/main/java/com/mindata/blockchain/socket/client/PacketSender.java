@@ -23,8 +23,4 @@ public class PacketSender {
         Aio.sendToGroup(clientGroupContext, GROUP_NAME, blockPacket);
     }
 
-    public void sendSingle() {
-
-    }
-
 }
