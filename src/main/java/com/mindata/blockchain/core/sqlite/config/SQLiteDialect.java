@@ -1,6 +1,6 @@
-package com.mindata.blockchain.core.sqlite;
+package com.mindata.blockchain.core.sqlite.config;
 
-import com.mindata.blockchain.core.sqlite.identity.SQLiteDialectIdentityColumnSupport;
+import com.mindata.blockchain.core.sqlite.config.identity.SQLiteDialectIdentityColumnSupport;
 import org.hibernate.JDBCException;
 import org.hibernate.ScrollMode;
 import org.hibernate.dialect.Dialect;

@@ -1,4 +1,4 @@
-package com.mindata.blockchain.core.sqlite.identity;
+package com.mindata.blockchain.core.sqlite.config.identity;
 
 import org.hibernate.dialect.Dialect;
 import org.hibernate.dialect.identity.IdentityColumnSupportImpl;

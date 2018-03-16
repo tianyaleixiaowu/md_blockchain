@@ -14,9 +14,6 @@ public class PacketBuilder<T extends BaseBody> {
 
     private T body;
 
-    private Long respId;
-
-
     public PacketBuilder<T> setType(byte type) {
         this.type = type;
         return this;
@@ -24,11 +21,6 @@ public class PacketBuilder<T extends BaseBody> {
 
     public PacketBuilder<T> setBody(T body) {
         this.body = body;
-        return this;
-    }
-
-    public PacketBuilder<T> setRespId(Long respId) {
-        this.respId = respId;
         return this;
     }
 

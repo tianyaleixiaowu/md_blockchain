@@ -24,7 +24,7 @@ public class CheckerManager {
             return new CheckBlockBody(-4, "block的时间错误");
         }
 
-        return new CheckBlockBody(0, "OK");
+        return new CheckBlockBody(0, "OK", block.getHash());
     }
 
 }

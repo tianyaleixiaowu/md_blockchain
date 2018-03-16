@@ -9,7 +9,6 @@ import java.io.UnsupportedEncodingException;
  * @author wuweifeng wrote on 2018/3/9.
  */
 public class BlockPacket extends Packet {
-    private static final long serialVersionUID = -5481926483435771100L;
     /**
      *  消息头的长度 1+4
      */

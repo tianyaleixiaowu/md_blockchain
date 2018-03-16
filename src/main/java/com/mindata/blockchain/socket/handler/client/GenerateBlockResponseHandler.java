@@ -1,5 +1,7 @@
 package com.mindata.blockchain.socket.handler.client;
 
+import com.mindata.blockchain.ApplicationContextProvider;
+import com.mindata.blockchain.core.event.AddBlockEvent;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.CheckBlockBody;
 import com.mindata.blockchain.socket.packet.BlockPacket;
@@ -23,7 +25,11 @@ public class GenerateBlockResponseHandler extends AbstractBlockHandler<CheckBloc
     @Override
     public Object handler(BlockPacket packet, CheckBlockBody checkBlockBody, ChannelContext channelContext) throws Exception {
         logger.info("收到<请求生成Block的回应>消息：" + Json.toJson(checkBlockBody));
-
+        //节点回应时会带着当初客户端请求时的packetId
+        String respId = checkBlockBody.getResponseMsgId();
+        //code为0时为同意
+        int code = checkBlockBody.getCode();
+        ApplicationContextProvider.publishEvent(new AddBlockEvent(checkBlockBody.getBlockHash()));
 
         return null;
     }

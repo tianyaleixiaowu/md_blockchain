@@ -1,4 +1,4 @@
-package com.mindata.blockchain.core.sqlite;
+package com.mindata.blockchain.core.sqlite.config;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.metadata.ClassMetadata;

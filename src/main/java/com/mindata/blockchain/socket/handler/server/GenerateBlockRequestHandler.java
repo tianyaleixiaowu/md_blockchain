@@ -33,11 +33,12 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<GenerateBl
         logger.info("收到<生成Block>请求消息，消息id为：" + packet.getId() + "，block信息为[" + generateBlockBody.getBlock() + "]");
 
         CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);
-        CheckBlockBody checkerResult = checkerManager.check(generateBlockBody.getBlock());
+        CheckBlockBody checkBlockBody = checkerManager.check(generateBlockBody.getBlock());
+        checkBlockBody.setResponseMsgId(generateBlockBody.getMessageId());
 
         //返回同意、拒绝的响应
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_RESPONSE).setBody
-                (checkerResult).setRespId(packet.getId()).build();
+                (checkBlockBody).build();
         Aio.send(channelContext, blockPacket);
 
         return null;

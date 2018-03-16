@@ -39,5 +39,7 @@ public interface Constants {
 	 * 区块hash与区块本身的key value映射，key的前缀，如{key_block_xxxxxxx -> blockJson}
 	 */
 	String KEY_BLOCK_HASH_PREFIX = "key_block_";
+
+	String KEY_REQUEST_PREFIX = "key_request_";
 }
 

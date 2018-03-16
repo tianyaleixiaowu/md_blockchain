@@ -13,13 +13,22 @@ public class CheckBlockBody extends BaseBody {
      * 附带的message
      */
     private String message;
+    /**
+     * block的hash，用来确定是哪一个block
+     */
+    private String blockHash;
 
     public CheckBlockBody() {
     }
 
     public CheckBlockBody(int code, String message) {
+        this(code, message, null);
+    }
+
+    public CheckBlockBody(int code, String message, String blockHash) {
         this.code = code;
         this.message = message;
+        this.blockHash = blockHash;
     }
 
     public int getCode() {
@@ -38,11 +47,20 @@ public class CheckBlockBody extends BaseBody {
         this.message = message;
     }
 
+    public String getBlockHash() {
+        return blockHash;
+    }
+
+    public void setBlockHash(String blockHash) {
+        this.blockHash = blockHash;
+    }
+
     @Override
     public String toString() {
         return "CheckBlockBody{" +
                 "code=" + code +
                 ", message='" + message + '\'' +
+                ", blockHash='" + blockHash + '\'' +
                 '}';
     }
 }

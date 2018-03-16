@@ -3,8 +3,6 @@ package com.mindata.blockchain.socket.base;
 import com.mindata.blockchain.socket.body.BaseBody;
 import com.mindata.blockchain.socket.common.Const;
 import com.mindata.blockchain.socket.packet.BlockPacket;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
 import org.tio.utils.json.Json;
 
@@ -14,7 +12,6 @@ import org.tio.utils.json.Json;
  * 2017年3月27日 下午9:56:16
  */
 public abstract class AbstractBlockHandler<T extends BaseBody> implements HandlerInterface {
-	private static Logger log = LoggerFactory.getLogger(AbstractBlockHandler.class);
 
 	public AbstractBlockHandler() {
 	}
@@ -33,6 +30,14 @@ public abstract class AbstractBlockHandler<T extends BaseBody> implements Handle
 		return handler(packet, bsBody, channelContext);
 	}
 
+	/**
+	 * 实际的handler处理
+	 * @param packet packet
+	 * @param bsBody 解析后的对象
+	 * @param channelContext channelContext
+	 * @return 用不上
+	 * @throws Exception Exception
+	 */
 	public abstract Object handler(BlockPacket packet, T bsBody, ChannelContext channelContext) throws Exception;
 
 }

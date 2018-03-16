@@ -1,7 +1,7 @@
 spring:
   jpa:
     show-sql: false
-    database-platform: com.mindata.blockchain.core.sqlite.SQLiteDialect
+    database-platform: com.mindata.blockchain.core.sqlite.config.SQLiteDialect
     generate-ddl: true
 sqlite:
   dbName: a.db  #本地sqlite的名字

@@ -1,4 +1,4 @@
-package com.mindata.blockchain.core.sqlite;
+package com.mindata.blockchain.core.sqlite.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

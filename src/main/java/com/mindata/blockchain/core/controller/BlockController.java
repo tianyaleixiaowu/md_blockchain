@@ -8,6 +8,7 @@ import com.mindata.blockchain.core.requestbody.BlockRequestBody;
 import com.mindata.blockchain.core.service.BlockService;
 import com.mindata.blockchain.socket.body.GenerateBlockBody;
 import com.mindata.blockchain.socket.client.PacketSender;
+import com.mindata.blockchain.socket.holder.RequestResultHolder;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.PacketBuilder;
 import com.mindata.blockchain.socket.packet.PacketType;
@@ -47,6 +48,7 @@ public class BlockController {
         BlockPacket packet = new PacketBuilder<GenerateBlockBody>()
                 .setType(PacketType.GENERATE_BLOCK_REQUEST)
                 .setBody(new GenerateBlockBody(block)).build();
+        RequestResultHolder.putTempBlock(block);
         packetSender.sendGroup(packet);
         return null;
     }

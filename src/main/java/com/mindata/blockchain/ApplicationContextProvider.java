@@ -3,10 +3,11 @@ package com.mindata.blockchain;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by wuweifeng on 2018/3/13.
+ * @author wuweifeng on 2018/3/13.
  */
 @Component
 public class ApplicationContextProvider implements ApplicationContextAware {
@@ -28,5 +29,9 @@ public class ApplicationContextProvider implements ApplicationContextAware {
 
     public static <T> T getBean(String name, Class<T> tClass) {
         return context.getBean(name, tClass);
+    }
+
+    public static void publishEvent(ApplicationEvent event) {
+        context.publishEvent(event);
     }
 }
