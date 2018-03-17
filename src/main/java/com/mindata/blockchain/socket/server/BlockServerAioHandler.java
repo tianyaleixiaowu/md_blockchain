@@ -28,6 +28,7 @@ public class BlockServerAioHandler extends AbstractAioHandler implements ServerA
         handlerMap.put(PacketType.TOTAL_BLOCK_INFO_REQUEST, new TotalBlockInfoRequestHandler());
         handlerMap.put(PacketType.LAST_BLOCK_INFO_REQUEST, new LastBlockInfoRequestHandler());
         handlerMap.put(PacketType.HEART_BEAT, new HeartBeatHandler());
+        handlerMap.put(PacketType.NEXT_BLOCK_INFO_REQUEST, new NextBlockRequestHandler());
     }
 
 

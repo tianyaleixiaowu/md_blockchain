@@ -36,4 +36,12 @@ public interface PacketType {
      * 我的最后一块信息
      */
     byte LAST_BLOCK_INFO_RESPONSE = -4;
+    /**
+     * 获取下一个区块的信息
+     */
+    byte NEXT_BLOCK_INFO_REQUEST = 5;
+    /**
+     * 获取下一个区块的信息
+     */
+    byte NEXT_BLOCK_INFO_RESPONSE = -5;
 }

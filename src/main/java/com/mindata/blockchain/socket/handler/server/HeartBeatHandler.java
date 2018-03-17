@@ -11,6 +11,7 @@ import org.tio.core.ChannelContext;
  * 客户端心跳包
  * @author wuweifeng wrote on 2018/3/12.
  */
+@Deprecated
 public class HeartBeatHandler extends AbstractBlockHandler<HeartBeatBody> {
     private Logger logger = LoggerFactory.getLogger(HeartBeatHandler.class);
 

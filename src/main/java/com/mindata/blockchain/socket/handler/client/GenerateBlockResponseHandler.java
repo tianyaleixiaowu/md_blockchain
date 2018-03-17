@@ -29,6 +29,8 @@ public class GenerateBlockResponseHandler extends AbstractBlockHandler<CheckBloc
         String respId = checkBlockBody.getResponseMsgId();
         //code为0时为同意
         int code = checkBlockBody.getCode();
+
+
         ApplicationContextProvider.publishEvent(new AddBlockEvent(checkBlockBody.getBlockHash()));
 
         return null;

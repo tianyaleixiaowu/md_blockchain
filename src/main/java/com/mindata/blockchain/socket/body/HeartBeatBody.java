@@ -3,6 +3,7 @@ package com.mindata.blockchain.socket.body;
 /**
  * @author wuweifeng wrote on 2018/3/12.
  */
+@Deprecated
 public class HeartBeatBody extends BaseBody {
     /**
      * text

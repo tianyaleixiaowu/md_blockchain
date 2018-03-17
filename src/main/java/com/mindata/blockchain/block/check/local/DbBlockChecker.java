@@ -16,10 +16,10 @@ public class DbBlockChecker implements BlockChecker {
     @Override
     public int checkNum(Block block) {
         //本地区块大于请求生成的号，则拒绝，并返回自己的区块号
-        if (localBlock != null && localBlock.getBlockHeader().getNumber() >= block.getBlockHeader().getNumber()) {
-            //同意生成区块
-            return localBlock.getBlockHeader().getNumber();
-        }
+        //if (localBlock != null && localBlock.getBlockHeader().getNumber() >= block.getBlockHeader().getNumber()) {
+        //    //同意生成区块
+        //    return localBlock.getBlockHeader().getNumber();
+        //}
 
         //同意
         return 0;

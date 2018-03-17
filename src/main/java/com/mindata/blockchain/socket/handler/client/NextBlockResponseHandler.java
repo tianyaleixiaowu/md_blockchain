@@ -10,11 +10,10 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.json.Json;
 
 /**
- * 对别人获取最后一个区块的信息请求的回复
- * @author wuweifeng wrote on 2018/3/12.
+ * @author wuweifeng wrote on 2018/3/16.
  */
-public class LastBlockInfoResponseHandler extends AbstractBlockHandler<BlockBody> {
-    private Logger logger = LoggerFactory.getLogger(LastBlockInfoResponseHandler.class);
+public class NextBlockResponseHandler extends AbstractBlockHandler<BlockBody> {
+    private Logger logger = LoggerFactory.getLogger(TotalBlockInfoResponseHandler.class);
 
     @Override
     public Class<BlockBody> bodyClass() {
@@ -23,10 +22,16 @@ public class LastBlockInfoResponseHandler extends AbstractBlockHandler<BlockBody
 
     @Override
     public Object handler(BlockPacket packet, BlockBody blockBody, ChannelContext channelContext) throws Exception {
-        logger.info("收到<获取最后一个区块的信息的回应>" + Json.toJson(blockBody));
-        //别人回应的最新的区块信息，多个server会回复多个，筛选后，选择链最长的，并更新到本地
-        Block block = blockBody.getBlock();
+        logger.info("收到<请求下一个Block的回应>消息：" + Json.toJson(blockBody));
 
+        Block block = blockBody.getBlock();
+        //如果为null，说明已经是最新的块了
+        if (block == null) {
+             logger.info("已是最新块了");
+        } else {
+            logger.info("下一块是" + block);
+            //TODO 更新本地
+        }
 
         return null;
     }

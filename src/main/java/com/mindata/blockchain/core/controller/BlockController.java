@@ -1,12 +1,14 @@
 package com.mindata.blockchain.core.controller;
 
 import com.mindata.blockchain.block.Block;
+import com.mindata.blockchain.block.BlockHeader;
 import com.mindata.blockchain.common.exception.TrustSDKException;
 import com.mindata.blockchain.core.bean.BaseData;
 import com.mindata.blockchain.core.bean.ResultGenerator;
+import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
 import com.mindata.blockchain.core.service.BlockService;
-import com.mindata.blockchain.socket.body.GenerateBlockBody;
+import com.mindata.blockchain.socket.body.BlockBody;
 import com.mindata.blockchain.socket.client.PacketSender;
 import com.mindata.blockchain.socket.holder.RequestResultHolder;
 import com.mindata.blockchain.socket.packet.BlockPacket;
@@ -26,6 +28,8 @@ public class BlockController {
     private BlockService blockService;
     @Resource
     private PacketSender packetSender;
+    @Resource
+    private DbBlockManager dbBlockManager;
 
     /**
      * 添加一个block
@@ -43,12 +47,36 @@ public class BlockController {
     @GetMapping
     public BaseData test() throws Exception {
         Block block = new Block();
-        block.setHash("123456");
+        BlockHeader blockHeader = new BlockHeader();
+        blockHeader.setTimeStamp(System.currentTimeMillis());
+        blockHeader.setHashPreviousBlock("1");
+        block.setHash("2");
+        block.setBlockHeader(blockHeader);
 
-        BlockPacket packet = new PacketBuilder<GenerateBlockBody>()
+        BlockPacket packet = new PacketBuilder<BlockBody>()
                 .setType(PacketType.GENERATE_BLOCK_REQUEST)
-                .setBody(new GenerateBlockBody(block)).build();
+                .setBody(new BlockBody(block)).build();
         RequestResultHolder.putTempBlock(block);
+        packetSender.sendGroup(packet);
+        return null;
+    }
+
+    @GetMapping("/last")
+    public BaseData lastBlock() throws Exception {
+        BlockPacket packet = new PacketBuilder<BlockBody>()
+                .setType(PacketType.LAST_BLOCK_INFO_REQUEST)
+                .setBody(new BlockBody()).build();
+        packetSender.sendGroup(packet);
+        return null;
+    }
+
+
+    @GetMapping("/next")
+    public BaseData nextBlock() throws Exception {
+        Block block = dbBlockManager.getFirstBlock();
+        BlockPacket packet = new PacketBuilder<BlockBody>()
+                .setType(PacketType.NEXT_BLOCK_INFO_REQUEST)
+                .setBody(new BlockBody(block)).build();
         packetSender.sendGroup(packet);
         return null;
     }

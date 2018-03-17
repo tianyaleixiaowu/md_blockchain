@@ -3,7 +3,6 @@ package com.mindata.blockchain.core.service;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.mindata.blockchain.block.Block;
-import com.mindata.blockchain.block.BlockBody;
 import com.mindata.blockchain.block.BlockHeader;
 import com.mindata.blockchain.block.Instruction;
 import com.mindata.blockchain.block.merkle.MerkleTree;
@@ -11,7 +10,7 @@ import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.common.Sha256;
 import com.mindata.blockchain.common.exception.TrustSDKException;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
-import com.mindata.blockchain.socket.body.GenerateBlockBody;
+import com.mindata.blockchain.socket.body.BlockBody;
 import com.mindata.blockchain.socket.client.PacketSender;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.PacketBuilder;
@@ -76,7 +75,7 @@ public class BlockService {
     public Block addBlock(BlockRequestBody blockRequestBody) {
         Block block = new Block();
         BlockHeader blockHeader = new BlockHeader();
-        BlockBody blockBody = blockRequestBody.getBlockBody();
+        com.mindata.blockchain.block.BlockBody blockBody = blockRequestBody.getBlockBody();
         List<Instruction> instructions = blockBody.getTransactions();
         List<String> hashList = instructions.stream().map(Instruction::getHash).collect(Collectors
                 .toList());
@@ -90,7 +89,7 @@ public class BlockService {
         block.setHash(Sha256.sha256(blockHeader.toString() + blockBody.toString()));
 
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_REQUEST).setBody(new
-                GenerateBlockBody(block)).build();
+                BlockBody(block)).build();
 
 
         //TODO 广播给其他人做验证

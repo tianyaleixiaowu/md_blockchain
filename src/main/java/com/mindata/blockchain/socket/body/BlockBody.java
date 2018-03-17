@@ -3,19 +3,20 @@ package com.mindata.blockchain.socket.body;
 import com.mindata.blockchain.block.Block;
 
 /**
+ * body里是一个block信息
  * @author wuweifeng wrote on 2018/3/12.
  */
-public class GenerateBlockBody extends BaseBody {
+public class BlockBody extends BaseBody {
     /**
      * blockJson
      */
     private Block block;
 
-    public GenerateBlockBody() {
+    public BlockBody() {
         super();
     }
 
-    public GenerateBlockBody(Block block) {
+    public BlockBody(Block block) {
         super();
         this.block = block;
     }
@@ -30,7 +31,7 @@ public class GenerateBlockBody extends BaseBody {
 
     @Override
     public String toString() {
-        return "GenerateBlockBody{" +
+        return "BlockBody{" +
                 "block=" + block +
                 '}';
     }
