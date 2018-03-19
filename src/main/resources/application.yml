@@ -7,3 +7,4 @@ sqlite:
   dbName: a.db  #本地sqlite的名字
 version: 1
 appId: wolf
+managerUrl: http://localhost:8888/

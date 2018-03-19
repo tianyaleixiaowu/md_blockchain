@@ -7,6 +7,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
+ * 对sqlite数据库的操作（监听新增区块请求，执行对应的sql命令）
  * @author wuweifeng wrote on 2018/3/15.
  */
 @Component

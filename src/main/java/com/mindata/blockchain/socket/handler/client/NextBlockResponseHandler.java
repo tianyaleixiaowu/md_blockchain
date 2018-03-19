@@ -43,15 +43,11 @@ public class NextBlockResponseHandler extends AbstractBlockHandler<BlockBody> {
         //校验通过，则存入本地DB，保存新区块
         if (checkBlockBody.getCode() == 0) {
             ApplicationContextProvider.publishEvent(new AddBlockEvent(block));
-        } else {
-
         }
 
         //需要清除掉原来的key
         RequestResponseMap.remove(blockBody.getResponseMsgId());
         logger.info("下一块是" + block);
-        //TODO 更新本地
-
 
         return null;
     }

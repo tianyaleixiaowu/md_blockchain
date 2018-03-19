@@ -9,7 +9,6 @@ import com.mindata.blockchain.socket.packet.BlockPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
-import org.tio.utils.json.Json;
 
 /**
  * 对别人请求生成区块的回应
@@ -25,7 +24,8 @@ public class GenerateBlockResponseHandler extends AbstractBlockHandler<CheckBloc
 
     @Override
     public Object handler(BlockPacket packet, CheckBlockBody checkBlockBody, ChannelContext channelContext) {
-        logger.info("收到来自于<" + checkBlockBody.getAppId() + ">的回复，<回应生成Block>：" + Json.toJson(checkBlockBody));
+        logger.info("收到来自于<" + checkBlockBody.getAppId() + ">的回复，<回应生成Block>，code为：" + checkBlockBody.getCode() +
+                "，message为：" + checkBlockBody.getMessage());
         //节点回应时会带着当初客户端请求时的msgId
         String respId = checkBlockBody.getResponseMsgId();
         //code为0时为同意
