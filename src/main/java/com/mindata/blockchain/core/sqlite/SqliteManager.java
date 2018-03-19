@@ -2,7 +2,6 @@ package com.mindata.blockchain.core.sqlite;
 
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.core.event.AddBlockEvent;
-import com.mindata.blockchain.socket.holder.RequestResultHolder;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -21,9 +20,9 @@ public class SqliteManager {
     @Order(2)
     @EventListener(AddBlockEvent.class)
     public void executeSql(AddBlockEvent addBlockEvent) {
-        String hash = (String) addBlockEvent.getSource();
-        Block block = RequestResultHolder.getTempBlock(hash);
-        RequestResultHolder.clearTempBlock(hash);
+        Block block = (Block) addBlockEvent.getSource();
+        //Block block = MessageHolder.getTempBlock(hash);
+        //MessageHolder.clearTempBlock(hash);
 
     }
 }

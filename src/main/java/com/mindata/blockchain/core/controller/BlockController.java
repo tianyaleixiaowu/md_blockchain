@@ -10,7 +10,6 @@ import com.mindata.blockchain.core.requestbody.BlockRequestBody;
 import com.mindata.blockchain.core.service.BlockService;
 import com.mindata.blockchain.socket.body.BlockBody;
 import com.mindata.blockchain.socket.client.PacketSender;
-import com.mindata.blockchain.socket.holder.RequestResultHolder;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.PacketBuilder;
 import com.mindata.blockchain.socket.packet.PacketType;
@@ -45,7 +44,7 @@ public class BlockController {
     }
 
     @GetMapping
-    public BaseData test() throws Exception {
+    public BaseData test() {
         Block block = new Block();
         BlockHeader blockHeader = new BlockHeader();
         blockHeader.setTimeStamp(System.currentTimeMillis());
@@ -56,7 +55,7 @@ public class BlockController {
         BlockPacket packet = new PacketBuilder<BlockBody>()
                 .setType(PacketType.GENERATE_BLOCK_REQUEST)
                 .setBody(new BlockBody(block)).build();
-        RequestResultHolder.putTempBlock(block);
+
         packetSender.sendGroup(packet);
         return null;
     }

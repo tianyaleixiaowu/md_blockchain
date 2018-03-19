@@ -1,5 +1,7 @@
 package com.mindata.blockchain.socket.body;
 
+import com.mindata.blockchain.common.AppId;
+
 import java.util.UUID;
 
 /**
@@ -21,6 +23,10 @@ public class BaseBody {
      * 回复的哪条消息
      */
 	private String responseMsgId;
+    /**
+     * 自己是谁
+     */
+	private String appId = AppId.value;
 
     public BaseBody() {
     }
@@ -53,6 +59,14 @@ public class BaseBody {
 
     public void setResponseMsgId(String responseMsgId) {
         this.responseMsgId = responseMsgId;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
     }
 
     @Override

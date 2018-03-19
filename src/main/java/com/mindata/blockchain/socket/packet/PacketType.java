@@ -1,6 +1,7 @@
 package com.mindata.blockchain.socket.packet;
 
 /**
+ * packetType大于0时是请求类型，小于0时为响应类型
  * @author wuweifeng wrote on 2018/3/9.
  */
 public interface PacketType {

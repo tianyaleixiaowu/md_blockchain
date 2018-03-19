@@ -28,14 +28,16 @@ public class NextBlockRequestHandler extends AbstractBlockHandler<BlockBody> {
     }
 
     @Override
-    public Object handler(BlockPacket packet, BlockBody blockBody, ChannelContext channelContext) throws Exception {
+    public Object handler(BlockPacket packet, BlockBody blockBody, ChannelContext channelContext) {
         logger.info("收到<请求某Block的下一Block>消息，请求者的block为：" + Json.toJson(blockBody));
         //传来的Block，如果为null，说明发起方连一个Block都没有
         Block block = blockBody.getBlock();
 
         Block nextBlock = ApplicationContextProvider.getBean(DbBlockManager.class).getNextBlock(block);
+        BlockBody respBody = new BlockBody(nextBlock);
+        respBody.setResponseMsgId(blockBody.getMessageId());
         BlockPacket blockPacket = new PacketBuilder<BlockBody>().setType(PacketType
-                .NEXT_BLOCK_INFO_RESPONSE).setBody(new BlockBody(nextBlock)).build();
+                .NEXT_BLOCK_INFO_RESPONSE).setBody(respBody).build();
         Aio.send(channelContext, blockPacket);
 
         return null;

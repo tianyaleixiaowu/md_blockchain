@@ -6,3 +6,4 @@ spring:
 sqlite:
   dbName: a.db  #本地sqlite的名字
 version: 1
+appId: wolf

@@ -1,5 +1,6 @@
 package com.mindata.blockchain.core.event;
 
+import com.mindata.blockchain.block.Block;
 import org.springframework.context.ApplicationEvent;
 
 /**
@@ -7,7 +8,7 @@ import org.springframework.context.ApplicationEvent;
  * @author wuweifeng wrote on 2018/3/15.
  */
 public class AddBlockEvent extends ApplicationEvent {
-    public AddBlockEvent(String hash) {
-        super(hash);
+    public AddBlockEvent(Block block) {
+        super(block);
     }
 }

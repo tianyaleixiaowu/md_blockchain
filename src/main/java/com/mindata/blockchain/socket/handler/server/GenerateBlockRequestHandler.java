@@ -28,13 +28,13 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<BlockBody>
     }
 
     @Override
-    public Object handler(BlockPacket packet, BlockBody blockBody, ChannelContext channelContext)
-            throws Exception {
-        logger.info("收到<生成Block>请求消息，消息id为：" + packet.getId() + "，block信息为[" + blockBody.getBlock() + "]");
+    public Object handler(BlockPacket packet, BlockBody blockBody, ChannelContext channelContext) {
+        logger.info("收到来自于<" + blockBody.getAppId() + "><生成Block>请求消息，block信息为[" + blockBody.getBlock() + "]");
 
         CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);
         CheckBlockBody checkBlockBody = checkerManager.check(blockBody.getBlock());
         checkBlockBody.setResponseMsgId(blockBody.getMessageId());
+        checkBlockBody.setBlock(blockBody.getBlock());
 
         //返回同意、拒绝的响应
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_RESPONSE).setBody

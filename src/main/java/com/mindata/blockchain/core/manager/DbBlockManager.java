@@ -6,7 +6,6 @@ import com.mindata.blockchain.block.db.DbTool;
 import com.mindata.blockchain.common.Constants;
 import com.mindata.blockchain.common.FastJsonUtil;
 import com.mindata.blockchain.core.event.AddBlockEvent;
-import com.mindata.blockchain.socket.holder.RequestResultHolder;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -80,8 +79,8 @@ public class DbBlockManager {
     @Order(1)
     @EventListener(AddBlockEvent.class)
     public void addBlock(AddBlockEvent addBlockEvent) {
-        String hash = (String) addBlockEvent.getSource();
-        Block block = RequestResultHolder.getTempBlock(hash);
+        Block block = (Block) addBlockEvent.getSource();
+        String hash = block.getHash();
         //存入rocksDB
         dbTool.put(hash, Json.toJson(block));
         //设置最后一个block的key value
