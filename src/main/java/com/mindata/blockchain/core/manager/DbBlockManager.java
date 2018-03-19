@@ -78,9 +78,13 @@ public class DbBlockManager {
      */
     @Order(1)
     @EventListener(AddBlockEvent.class)
-    public void addBlock(AddBlockEvent addBlockEvent) {
+    public synchronized void addBlock(AddBlockEvent addBlockEvent) {
         Block block = (Block) addBlockEvent.getSource();
         String hash = block.getHash();
+        //如果已经存在了，说明已经更新过该Block了
+        if (dbTool.get(hash) != null) {
+            return;
+        }
         //存入rocksDB
         dbTool.put(hash, Json.toJson(block));
         //设置最后一个block的key value
