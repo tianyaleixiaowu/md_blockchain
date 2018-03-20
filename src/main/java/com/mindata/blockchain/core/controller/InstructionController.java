@@ -32,6 +32,9 @@ public class InstructionController {
         if (!instructionService.checkKeyPair(instructionBody)) {
              return ResultGenerator.genFailResult("公私钥不是一对");
         }
+        if (!instructionService.checkContent(instructionBody)) {
+            return ResultGenerator.genFailResult("Delete和Update操作需要有id和json内容");
+        }
         return ResultGenerator.genSuccessResult(instructionService.build(instructionBody));
     }
 }

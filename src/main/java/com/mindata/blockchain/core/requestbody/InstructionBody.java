@@ -17,6 +17,10 @@ public class InstructionBody {
      */
     private String json;
     /**
+     * 业务id
+     */
+    private String instructionId;
+    /**
      * 私钥
      */
     private String privateKey;
@@ -31,9 +35,18 @@ public class InstructionBody {
                 "operation=" + operation +
                 ", table='" + table + '\'' +
                 ", json='" + json + '\'' +
+                ", instructionId='" + instructionId + '\'' +
                 ", privateKey='" + privateKey + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 '}';
+    }
+
+    public String getInstructionId() {
+        return instructionId;
+    }
+
+    public void setInstructionId(String instructionId) {
+        this.instructionId = instructionId;
     }
 
     public String getPublicKey() {

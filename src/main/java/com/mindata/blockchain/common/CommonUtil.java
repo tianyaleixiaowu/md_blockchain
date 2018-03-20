@@ -3,6 +3,7 @@ package com.mindata.blockchain.common;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.Enumeration;
+import java.util.UUID;
 
 /**
  * @author wuweifeng wrote on 2018/3/8.
@@ -23,6 +24,10 @@ public class CommonUtil {
             return inetAddress.getHostName();
         }
         return null;
+    }
+
+    public static String generateUuid() {
+        return UUID.randomUUID().toString();
     }
 
     /**

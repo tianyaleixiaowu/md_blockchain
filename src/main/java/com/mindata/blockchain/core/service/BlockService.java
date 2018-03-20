@@ -47,7 +47,7 @@ public class BlockService {
                 .getPublicKey())) {
             return "请求参数缺失";
         }
-        List<Instruction> instructions = blockRequestBody.getBlockBody().getTransactions();
+        List<Instruction> instructions = blockRequestBody.getBlockBody().getInstructions();
         if (CollectionUtil.isEmpty(instructions)) {
             return "指令信息不能为空";
         }
@@ -76,7 +76,7 @@ public class BlockService {
         Block block = new Block();
         BlockHeader blockHeader = new BlockHeader();
         com.mindata.blockchain.block.BlockBody blockBody = blockRequestBody.getBlockBody();
-        List<Instruction> instructions = blockBody.getTransactions();
+        List<Instruction> instructions = blockBody.getInstructions();
         List<String> hashList = instructions.stream().map(Instruction::getHash).collect(Collectors
                 .toList());
         blockHeader.setHashList(hashList);
@@ -91,8 +91,7 @@ public class BlockService {
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_REQUEST).setBody(new
                 BlockBody(block)).build();
 
-
-        //TODO 广播给其他人做验证
+        //广播给其他人做验证
         packetSender.sendGroup(blockPacket);
 
         return block;

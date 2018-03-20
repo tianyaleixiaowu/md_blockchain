@@ -1,8 +1,7 @@
 package com.mindata.blockchain.socket.body;
 
 import com.mindata.blockchain.common.AppId;
-
-import java.util.UUID;
+import com.mindata.blockchain.common.CommonUtil;
 
 /**
  *
@@ -18,7 +17,7 @@ public class BaseBody {
     /**
      * 每条消息的唯一id
      */
-	private String messageId = UUID.randomUUID().toString();
+	private String messageId = CommonUtil.generateUuid();
     /**
      * 回复的哪条消息
      */

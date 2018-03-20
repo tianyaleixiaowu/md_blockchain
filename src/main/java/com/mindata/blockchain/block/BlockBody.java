@@ -7,20 +7,30 @@ import java.util.List;
  * @author wuweifeng wrote on 2018/2/28.
  */
 public class BlockBody {
-    private List<Instruction> transactions;
-
-    public List<Instruction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Instruction> transactions) {
-        this.transactions = transactions;
-    }
+    private List<Instruction> instructions;
+    private List<InstructionReverse> instructionReverses;
 
     @Override
     public String toString() {
         return "BlockBody{" +
-                "transactions=" + transactions +
+                "instructions=" + instructions +
+                ", instructionReverses=" + instructionReverses +
                 '}';
+    }
+
+    public List<InstructionReverse> getInstructionReverses() {
+        return instructionReverses;
+    }
+
+    public void setInstructionReverses(List<InstructionReverse> instructionReverses) {
+        this.instructionReverses = instructionReverses;
+    }
+
+    public List<Instruction> getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(List<Instruction> instructions) {
+        this.instructions = instructions;
     }
 }

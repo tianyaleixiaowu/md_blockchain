@@ -6,7 +6,7 @@ package com.mindata.blockchain.block;
  */
 public class Instruction {
     /**
-     * 指令的操作，增删改（0，1，2）
+     * 指令的操作，增删改（1，-1，2）
      */
     private byte operation;
     /**
@@ -17,6 +17,10 @@ public class Instruction {
      * 具体内容
      */
     private String json;
+    /**
+     * 业务id，sql语句中where需要该Id
+     */
+    private String instructionId;
     /**
      * 时间戳
      */
@@ -82,6 +86,14 @@ public class Instruction {
         this.sign = sign;
     }
 
+    public String getInstructionId() {
+        return instructionId;
+    }
+
+    public void setInstructionId(String instructionId) {
+        this.instructionId = instructionId;
+    }
+
     public String getHash() {
         return hash;
     }
@@ -96,6 +108,7 @@ public class Instruction {
                 "operation=" + operation +
                 ", table='" + table + '\'' +
                 ", json='" + json + '\'' +
+                ", instructionId='" + instructionId + '\'' +
                 ", timeStamp=" + timeStamp +
                 ", publicKey='" + publicKey + '\'' +
                 ", sign='" + sign + '\'' +

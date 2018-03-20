@@ -15,7 +15,6 @@ public class RequestMapCleaner {
      */
     @Scheduled(fixedRate = 600000)
     public void companyStateRefreshTask() {
-        System.out.println("清理开始");
         RequestResponseMap.clearTimeOutKey();
     }
 }
