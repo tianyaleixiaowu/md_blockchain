@@ -1,5 +1,7 @@
 package com.mindata.blockchain.socket.client;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tio.client.intf.ClientAioListener;
 import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
@@ -10,18 +12,21 @@ import static com.mindata.blockchain.socket.common.Const.GROUP_NAME;
 /**
  * client端对各个server连接的情况回调。</p>
  * 当某个server的心跳超时（2min）时，Aio会从group里remove掉该连接，需要在重新connect后重新加入group
+ *
  * @author wuweifeng wrote on 2018/3/12.
  */
 public class BlockClientAioListener implements ClientAioListener {
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public void onAfterClose(ChannelContext channelContext, Throwable throwable, String s, boolean b) throws Exception {
-        System.out.println("onAfterClose");
+        logger.info("连接中断：server地址为-" + channelContext.getServerNode());
         Aio.unbindGroup(channelContext);
     }
 
     @Override
     public void onAfterConnected(ChannelContext channelContext, boolean b, boolean b1) throws Exception {
-        System.out.println("onAfterConnected");
+        logger.info("连接完毕：server地址为-" + channelContext.getServerNode());
         Aio.bindGroup(channelContext, GROUP_NAME);
     }
 

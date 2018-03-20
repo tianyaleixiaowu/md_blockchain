@@ -1,22 +1,17 @@
 package com.mindata.blockchain.socket.client;
 
 import cn.hutool.core.util.StrUtil;
-import com.mindata.blockchain.ApplicationContextProvider;
-import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.common.AppId;
-import com.mindata.blockchain.core.event.ClientRequestEvent;
-import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.socket.base.AbstractAioHandler;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.BaseBody;
-import com.mindata.blockchain.socket.body.BlockBody;
 import com.mindata.blockchain.socket.handler.client.GenerateBlockResponseHandler;
 import com.mindata.blockchain.socket.handler.client.LastBlockInfoResponseHandler;
 import com.mindata.blockchain.socket.handler.client.NextBlockResponseHandler;
 import com.mindata.blockchain.socket.handler.client.TotalBlockInfoResponseHandler;
 import com.mindata.blockchain.socket.holder.BaseResponse;
 import com.mindata.blockchain.socket.packet.BlockPacket;
-import com.mindata.blockchain.socket.packet.PacketBuilder;
+import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
 import com.mindata.blockchain.socket.packet.PacketType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,13 +41,7 @@ public class BlockClientAioHandler extends AbstractAioHandler implements ClientA
     @Override
     public BlockPacket heartbeatPacket() {
         //心跳包的内容就是隔一段时间向别的server获取一次别的最新的区块
-        Block block = ApplicationContextProvider.getBean(DbBlockManager.class).getLastBlock();
-
-        BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.NEXT_BLOCK_INFO_REQUEST).setBody(new
-                BlockBody(block)).build();
-        //发布client请求事件
-        ApplicationContextProvider.publishEvent(new ClientRequestEvent(blockPacket));
-        return blockPacket;
+        return NextBlockPacketBuilder.build();
     }
 
     /**

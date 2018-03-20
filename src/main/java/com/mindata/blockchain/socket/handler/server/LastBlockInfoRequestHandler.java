@@ -26,7 +26,7 @@ public class LastBlockInfoRequestHandler extends AbstractBlockHandler<BlockBody>
     }
 
     @Override
-    public Object handler(BlockPacket packet, BlockBody blockBody, ChannelContext channelContext) throws Exception {
+    public Object handler(BlockPacket packet, BlockBody blockBody, ChannelContext channelContext) {
         logger.info("收到<请求获取最后一个Block>消息");
         Block block = ApplicationContextProvider.getBean(DbBlockManager.class).getLastBlock();
 

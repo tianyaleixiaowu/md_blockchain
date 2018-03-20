@@ -9,8 +9,10 @@ import com.mindata.blockchain.socket.body.BlockBody;
 import com.mindata.blockchain.socket.body.CheckBlockBody;
 import com.mindata.blockchain.socket.client.RequestResponseMap;
 import com.mindata.blockchain.socket.packet.BlockPacket;
+import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tio.core.Aio;
 import org.tio.core.ChannelContext;
 import org.tio.utils.json.Json;
 
@@ -44,6 +46,8 @@ public class NextBlockResponseHandler extends AbstractBlockHandler<BlockBody> {
                 ApplicationContextProvider.publishEvent(new AddBlockEvent(block));
             }
             logger.info("下一块是" + block);
+            //继续请求下一块
+            Aio.send(channelContext, NextBlockPacketBuilder.build());
         }
 
         //需要清除掉原来的key
