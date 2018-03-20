@@ -11,9 +11,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class RequestMapCleaner {
     /**
-     * 10分钟清理一次
+     * 10分钟清理一次，单位毫秒
      */
-    @Scheduled(cron = "*/600 * * * * ?")
+    @Scheduled(fixedRate = 600000)
     public void companyStateRefreshTask() {
         System.out.println("清理开始");
         RequestResponseMap.clearTimeOutKey();
