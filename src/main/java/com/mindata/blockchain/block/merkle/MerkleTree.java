@@ -34,7 +34,7 @@ public class MerkleTree {
     /**
      * execute merkle_tree and set root.
      */
-    public void merkleTree() {
+    public MerkleTree build() {
         List<String> tempTxList = new ArrayList<>(this.txList);
 
         List<String> newTxList = getNewTxList(tempTxList);
@@ -44,6 +44,7 @@ public class MerkleTree {
         }
 
         this.root = newTxList.get(0);
+        return this;
     }
 
     /**

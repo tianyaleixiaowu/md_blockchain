@@ -6,7 +6,7 @@ import com.mindata.blockchain.block.Block;
  * 校验block是否合法，同意、拒绝区块生成请求
  * @author wuweifeng wrote on 2018/3/12.
  */
-public class CheckBlockBody extends BaseBody {
+public class RpcCheckBlockBody extends BaseBody {
     /**
      * 0是正常同意，-1区块number错误，-2没有权限，-3hash错误，-4时间错误，-10不合法的next block
      */
@@ -20,14 +20,14 @@ public class CheckBlockBody extends BaseBody {
      */
     private Block block;
 
-    public CheckBlockBody() {
+    public RpcCheckBlockBody() {
     }
 
-    public CheckBlockBody(int code, String message) {
+    public RpcCheckBlockBody(int code, String message) {
         this(code, message, null);
     }
 
-    public CheckBlockBody(int code, String message, Block block) {
+    public RpcCheckBlockBody(int code, String message, Block block) {
         this.code = code;
         this.message = message;
         this.block = block;

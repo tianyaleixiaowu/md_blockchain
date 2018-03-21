@@ -1,29 +1,96 @@
 package com.mindata.blockchain.core.sqlite;
 
+import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
-import com.mindata.blockchain.core.event.AddBlockEvent;
+import com.mindata.blockchain.block.Instruction;
+import com.mindata.blockchain.block.InstructionReverse;
+import com.mindata.blockchain.core.event.DbAsyncEvent;
+import com.mindata.blockchain.core.manager.SyncManager;
+import com.mindata.blockchain.core.manager.DbBlockManager;
+import com.mindata.blockchain.core.model.SyncEntity;
+import com.mindata.blockchain.core.sqlparser.InstructionParser;
 import org.springframework.context.event.EventListener;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 对sqlite数据库的操作（监听新增区块请求，执行对应的sql命令）
+ *
  * @author wuweifeng wrote on 2018/3/15.
  */
 @Component
 public class SqliteManager {
-    /**
-     * 数据库里添加一个新的区块，执行数据库语句
-     *
-     * @param addBlockEvent
-     *         addBlockEvent
-     */
-    @Order(2)
-    @EventListener(AddBlockEvent.class)
-    public void executeSql(AddBlockEvent addBlockEvent) {
-        Block block = (Block) addBlockEvent.getSource();
-        //Block block = MessageHolder.getTempBlock(hash);
-        //MessageHolder.clearTempBlock(hash);
+    @Resource
+    private InstructionParser instructionParser;
+    @Resource
+    private SyncManager syncManager;
+    @Resource
+    private DbBlockManager dbBlockManager;
 
+    /**
+     * sqlite同步，监听该事件后，去check当前已经同步到哪个区块了，然后继续执行之后的区块
+     */
+    @EventListener(DbAsyncEvent.class)
+    public void dbAsync() {
+        //查看同步到哪个区块了
+        SyncEntity syncEntity = syncManager.findLastOne();
+
+        Block block;
+        if (syncEntity == null) {
+            //从第一个开始
+            block = dbBlockManager.getFirstBlock();
+        } else {
+            Block lastBlock = dbBlockManager.getLastBlock();
+            //已经同步到最后一块了
+            if (lastBlock.getHash().equals(syncEntity.getHash())) {
+                return;
+            }
+
+            String hash = syncEntity.getHash();
+            block = dbBlockManager.getNextBlock(dbBlockManager.getBlockByHash(hash));
+        }
+        execute(block);
+        ApplicationContextProvider.publishEvent(new DbAsyncEvent(""));
+    }
+
+    /**
+     * 根据一个block执行sql
+     *
+     * @param block
+     *         block
+     */
+    private void execute(Block block) {
+        List<Instruction> instructions = block.getBlockBody().getInstructions();
+        doSqlParse(instructions);
+
+        SyncEntity syncEntity = new SyncEntity();
+        syncEntity.setHash(block.getHash());
+        syncManager.save(syncEntity);
+    }
+
+    /**
+     * 执行回滚一个block
+     *
+     * @param block
+     *         block
+     */
+    private void rollBack(Block block) {
+        List<InstructionReverse> instructionReverses = block.getBlockBody().getInstructionReverses();
+        int size = instructionReverses.size();
+        //需要对语句进行反转，然后执行和execute一样的操作
+        List<Instruction> instructions = new ArrayList<>(size);
+        for (int i = size - 1; i >= 0; i--) {
+            instructions.add(instructionReverses.get(i));
+        }
+        doSqlParse(instructions);
+    }
+
+    private void doSqlParse(List<Instruction> instructions) {
+        for (Instruction instruction : instructions) {
+            instructionParser.parse(instruction);
+        }
     }
 }

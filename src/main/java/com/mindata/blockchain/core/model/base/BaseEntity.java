@@ -1,10 +1,11 @@
 package com.mindata.blockchain.core.model.base;
 
+import com.mindata.blockchain.common.CommonUtil;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-import java.util.Date;
 
 /**
  * @author wuweifeng wrote on 2018/3/2.
@@ -15,9 +16,9 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Date createTime;
+    private Long createTime;
 
-    private Date updateTime;
+    private Long updateTime = CommonUtil.getNow();
     /**
      * 最后操作人
      */
@@ -31,19 +32,19 @@ public class BaseEntity {
         this.publicKey = publicKey;
     }
 
-    public Date getCreateTime() {
+    public Long getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(Long createTime) {
         this.createTime = createTime;
     }
 
-    public Date getUpdateTime() {
+    public Long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Date updateTime) {
+    public void setUpdateTime(Long updateTime) {
         this.updateTime = updateTime;
     }
 

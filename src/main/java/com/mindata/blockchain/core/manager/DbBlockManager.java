@@ -47,6 +47,15 @@ public class DbBlockManager {
         return getBlockByHash(lastBlockHash);
     }
 
+    public String getLastBlockHash() {
+        Block block = getLastBlock();
+        if (block != null) {
+            return block.getHash();
+        }
+        return null;
+    }
+
+
     /**
      * 获取某一个block的下一个Block
      *
@@ -65,7 +74,7 @@ public class DbBlockManager {
         return getBlockByHash(nextHash);
     }
 
-    private Block getBlockByHash(String hash) {
+    public Block getBlockByHash(String hash) {
         String blockJson = dbTool.get(hash);
         return FastJsonUtil.toBean(blockJson, Block.class);
     }

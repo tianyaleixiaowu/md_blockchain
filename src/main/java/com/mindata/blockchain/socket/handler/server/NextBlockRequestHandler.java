@@ -4,7 +4,7 @@ import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
-import com.mindata.blockchain.socket.body.BlockBody;
+import com.mindata.blockchain.socket.body.RpcBlockBody;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.PacketBuilder;
 import com.mindata.blockchain.socket.packet.PacketType;
@@ -19,24 +19,24 @@ import org.tio.utils.json.Json;
  * 如A传来了3，而我本地有5个区块，则返回区块4。
  * @author wuweifeng wrote on 2018/3/16.
  */
-public class NextBlockRequestHandler extends AbstractBlockHandler<BlockBody> {
+public class NextBlockRequestHandler extends AbstractBlockHandler<RpcBlockBody> {
     private Logger logger = LoggerFactory.getLogger(TotalBlockInfoRequestHandler.class);
 
     @Override
-    public Class<BlockBody> bodyClass() {
-        return BlockBody.class;
+    public Class<RpcBlockBody> bodyClass() {
+        return RpcBlockBody.class;
     }
 
     @Override
-    public Object handler(BlockPacket packet, BlockBody blockBody, ChannelContext channelContext) {
-        logger.info("收到<请求某Block的下一Block>消息，请求者的block为：" + Json.toJson(blockBody));
+    public Object handler(BlockPacket packet, RpcBlockBody rpcBlockBody, ChannelContext channelContext) {
+        logger.info("收到<请求某Block的下一Block>消息，请求者的block为：" + Json.toJson(rpcBlockBody));
         //传来的Block，如果为null，说明发起方连一个Block都没有
-        Block block = blockBody.getBlock();
+        Block block = rpcBlockBody.getBlock();
 
         Block nextBlock = ApplicationContextProvider.getBean(DbBlockManager.class).getNextBlock(block);
-        BlockBody respBody = new BlockBody(nextBlock);
-        respBody.setResponseMsgId(blockBody.getMessageId());
-        BlockPacket blockPacket = new PacketBuilder<BlockBody>().setType(PacketType
+        RpcBlockBody respBody = new RpcBlockBody(nextBlock);
+        respBody.setResponseMsgId(rpcBlockBody.getMessageId());
+        BlockPacket blockPacket = new PacketBuilder<RpcBlockBody>().setType(PacketType
                 .NEXT_BLOCK_INFO_RESPONSE).setBody(respBody).build();
         Aio.send(channelContext, blockPacket);
 

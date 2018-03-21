@@ -3,7 +3,7 @@ package com.mindata.blockchain.block.check;
 import cn.hutool.core.util.StrUtil;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.core.manager.DbBlockManager;
-import com.mindata.blockchain.socket.body.CheckBlockBody;
+import com.mindata.blockchain.socket.body.RpcCheckBlockBody;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -18,17 +18,17 @@ public class CheckerManager {
     @Resource
     private DbBlockManager dbBlockManager;
 
-    public CheckBlockBody check(Block block) {
+    public RpcCheckBlockBody check(Block block) {
         int number = blockChecker.checkNum(block);
         if (number != 0) {
-             return new CheckBlockBody(-1, "block的number不合法");
+             return new RpcCheckBlockBody(-1, "block的number不合法");
         }
         int time = blockChecker.checkTime(block);
         if (time != 0) {
-            return new CheckBlockBody(-4, "block的时间错误");
+            return new RpcCheckBlockBody(-4, "block的时间错误");
         }
 
-        return new CheckBlockBody(0, "OK", block);
+        return new RpcCheckBlockBody(0, "OK", block);
     }
 
     /**
@@ -38,14 +38,14 @@ public class CheckerManager {
      * @return
      * 是否OK
      */
-    public CheckBlockBody checkIsNextBlock(Block block) {
+    public RpcCheckBlockBody checkIsNextBlock(Block block) {
         //基础格式、权限校验
-        CheckBlockBody checkBlockBody = check(block);
+        RpcCheckBlockBody rpcCheckBlockBody = check(block);
         //校验能否作为本地最新区块的next block
         if (!StrUtil.equals(block.getBlockHeader().getHashPreviousBlock(), dbBlockManager.getLastBlock().getHash())) {
-            return new CheckBlockBody(-10, "不能作为本地最新block的next block");
+            return new RpcCheckBlockBody(-10, "不能作为本地最新block的next block");
         }
-        return checkBlockBody;
+        return rpcCheckBlockBody;
     }
 
 }

@@ -5,12 +5,14 @@ import cn.hutool.core.util.StrUtil;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.block.BlockHeader;
 import com.mindata.blockchain.block.Instruction;
+import com.mindata.blockchain.block.InstructionReverse;
 import com.mindata.blockchain.block.merkle.MerkleTree;
 import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.common.Sha256;
 import com.mindata.blockchain.common.exception.TrustSDKException;
+import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
-import com.mindata.blockchain.socket.body.BlockBody;
+import com.mindata.blockchain.socket.body.RpcBlockBody;
 import com.mindata.blockchain.socket.client.PacketSender;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.PacketBuilder;
@@ -19,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +36,8 @@ public class BlockService {
     private int version;
     @Resource
     private PacketSender packetSender;
+    @Resource
+    private DbBlockManager dbBlockManager;
 
     /**
      * 校验指令集是否合法
@@ -73,23 +78,35 @@ public class BlockService {
      * @return Block
      */
     public Block addBlock(BlockRequestBody blockRequestBody) {
-        Block block = new Block();
+
         BlockHeader blockHeader = new BlockHeader();
         com.mindata.blockchain.block.BlockBody blockBody = blockRequestBody.getBlockBody();
         List<Instruction> instructions = blockBody.getInstructions();
+        List<InstructionReverse> instructionReverses = blockBody.getInstructionReverses();
         List<String> hashList = instructions.stream().map(Instruction::getHash).collect(Collectors
                 .toList());
+        List<String> reverseHashList = instructionReverses.stream().map(InstructionReverse::getHash).collect(Collectors
+                .toList());
         blockHeader.setHashList(hashList);
-        //计算所以指令的hashRoot
-        blockHeader.setHashMerkleRoot(new MerkleTree(hashList).getRoot());
+        blockHeader.setReverseHashList(reverseHashList);
+
+        List<String> tempHashList = new ArrayList<>();
+        //合并hashList用来计算merkle root
+        tempHashList.addAll(hashList);
+        tempHashList.addAll(reverseHashList);
+        //计算所有指令的hashRoot
+        blockHeader.setHashMerkleRoot(new MerkleTree(tempHashList).build().getRoot());
         blockHeader.setPublicKey(blockRequestBody.getPublicKey());
         blockHeader.setTimeStamp(CommonUtil.getNow());
         blockHeader.setVersion(version);
+        blockHeader.setHashPreviousBlock(dbBlockManager.getLastBlockHash());
+        Block block = new Block();
         block.setBlockBody(blockBody);
+        block.setBlockHeader(blockHeader);
         block.setHash(Sha256.sha256(blockHeader.toString() + blockBody.toString()));
 
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_REQUEST).setBody(new
-                BlockBody(block)).build();
+                RpcBlockBody(block)).build();
 
         //广播给其他人做验证
         packetSender.sendGroup(blockPacket);
