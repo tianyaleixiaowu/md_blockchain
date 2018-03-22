@@ -5,10 +5,7 @@ import com.mindata.blockchain.common.AppId;
 import com.mindata.blockchain.socket.base.AbstractAioHandler;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.BaseBody;
-import com.mindata.blockchain.socket.handler.client.GenerateBlockResponseHandler;
-import com.mindata.blockchain.socket.handler.client.LastBlockInfoResponseHandler;
-import com.mindata.blockchain.socket.handler.client.NextBlockResponseHandler;
-import com.mindata.blockchain.socket.handler.client.TotalBlockInfoResponseHandler;
+import com.mindata.blockchain.socket.handler.client.*;
 import com.mindata.blockchain.socket.holder.BaseResponse;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
@@ -36,6 +33,7 @@ public class BlockClientAioHandler extends AbstractAioHandler implements ClientA
         handlerMap.put(PacketType.TOTAL_BLOCK_INFO_RESPONSE, new TotalBlockInfoResponseHandler());
         handlerMap.put(PacketType.LAST_BLOCK_INFO_RESPONSE, new LastBlockInfoResponseHandler());
         handlerMap.put(PacketType.NEXT_BLOCK_INFO_RESPONSE, new NextBlockResponseHandler());
+        handlerMap.put(PacketType.GENERATE_COMPLETE_RESPONSE, new GenerateCompleteResponseHandler());
     }
 
     @Override

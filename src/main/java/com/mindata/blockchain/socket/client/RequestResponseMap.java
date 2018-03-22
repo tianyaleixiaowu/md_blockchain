@@ -74,6 +74,7 @@ public class RequestResponseMap {
         int unAgreeCount = baseResponses.size() - agreeCount;
         //判断是否过半
         if (agreeCount > halfSize) {
+            //发布新生成了区块事件
             ApplicationContextProvider.publishEvent(new AddBlockEvent(baseResponse.getObject()));
             //处理完毕移除掉key
             RequestResponseMap.remove(key);

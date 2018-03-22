@@ -30,7 +30,7 @@ public class NextBlockResponseHandler extends AbstractBlockHandler<RpcBlockBody>
     }
 
     @Override
-    public Object handler(BlockPacket packet, RpcBlockBody rpcBlockBody, ChannelContext channelContext) {
+    public synchronized Object handler(BlockPacket packet, RpcBlockBody rpcBlockBody, ChannelContext channelContext) {
         logger.info("收到来自于<" + rpcBlockBody.getAppId() + ">的回复，下一个Block为：" + Json.toJson(rpcBlockBody));
 
         Block block = rpcBlockBody.getBlock();

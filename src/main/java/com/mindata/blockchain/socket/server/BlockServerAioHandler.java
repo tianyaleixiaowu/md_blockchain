@@ -23,7 +23,7 @@ public class BlockServerAioHandler extends AbstractAioHandler implements ServerA
     private static Map<Byte, AbstractBlockHandler<?>> handlerMap = new HashMap<>();
 
     static {
-        handlerMap.put(PacketType.GENERATE_BLOCK_COMPLETE, new GenerateBlockCompleteHandler());
+        handlerMap.put(PacketType.GENERATE_COMPLETE_REQUEST, new GenerateCompleteRequestHandler());
         handlerMap.put(PacketType.GENERATE_BLOCK_REQUEST, new GenerateBlockRequestHandler());
         handlerMap.put(PacketType.TOTAL_BLOCK_INFO_REQUEST, new TotalBlockInfoRequestHandler());
         handlerMap.put(PacketType.LAST_BLOCK_INFO_REQUEST, new LastBlockInfoRequestHandler());

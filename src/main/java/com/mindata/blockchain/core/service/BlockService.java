@@ -78,7 +78,6 @@ public class BlockService {
      * @return Block
      */
     public Block addBlock(BlockRequestBody blockRequestBody) {
-
         BlockHeader blockHeader = new BlockHeader();
         com.mindata.blockchain.block.BlockBody blockBody = blockRequestBody.getBlockBody();
         List<Instruction> instructions = blockBody.getInstructions();

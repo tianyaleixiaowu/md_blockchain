@@ -60,13 +60,6 @@ public class BlockController {
 
     @GetMapping
     public BaseData test(String content) throws Exception {
-        //Block block = new Block();
-        //BlockHeader blockHeader = new BlockHeader();
-        //blockHeader.setTimeStamp(System.currentTimeMillis());
-        //blockHeader.setHashPreviousBlock("1");
-        //block.setHash("2");
-        //block.setBlockHeader(blockHeader);
-
         InstructionBody instructionBody = new InstructionBody();
         instructionBody.setOperation(Operation.ADD);
         instructionBody.setTable("message");
@@ -86,7 +79,7 @@ public class BlockController {
     }
 
     @GetMapping("/last")
-    public BaseData lastBlock() throws Exception {
+    public BaseData lastBlock() {
         BlockPacket packet = new PacketBuilder<RpcBlockBody>()
                 .setType(PacketType.LAST_BLOCK_INFO_REQUEST)
                 .setBody(new RpcBlockBody()).build();
@@ -106,7 +99,7 @@ public class BlockController {
     }
 
     @GetMapping("/next")
-    public BaseData nextBlock() throws Exception {
+    public BaseData nextBlock() {
         Block block = dbBlockManager.getFirstBlock();
         BlockPacket packet = new PacketBuilder<RpcBlockBody>()
                 .setType(PacketType.NEXT_BLOCK_INFO_REQUEST)
