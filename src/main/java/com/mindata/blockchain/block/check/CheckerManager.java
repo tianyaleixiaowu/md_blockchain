@@ -41,6 +41,9 @@ public class CheckerManager {
     public RpcCheckBlockBody checkIsNextBlock(Block block) {
         //基础格式、权限校验
         RpcCheckBlockBody rpcCheckBlockBody = check(block);
+        if (dbBlockManager.getLastBlock() == null) {
+            return rpcCheckBlockBody;
+        }
         //校验能否作为本地最新区块的next block
         if (!StrUtil.equals(block.getBlockHeader().getHashPreviousBlock(), dbBlockManager.getLastBlock().getHash())) {
             return new RpcCheckBlockBody(-10, "不能作为本地最新block的next block");

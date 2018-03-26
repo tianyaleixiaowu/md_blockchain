@@ -6,5 +6,6 @@ spring:
 sqlite:
   dbName: a.db  #本地sqlite的名字
 version: 1
-appId: wolf
-managerUrl: http://192.168.1.86:8888/
+name: ${NAME:maida}
+appId: ${APP_ID:wolf}
+managerUrl: ${MANAGER_URL:http://192.168.1.86:8888/}

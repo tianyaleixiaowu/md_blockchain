@@ -38,6 +38,8 @@ public class ClientStarter {
     private String managerUrl;
     @Value("${appId}")
     private String appId;
+    @Value("${name}")
+    private String name;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -47,12 +49,15 @@ public class ClientStarter {
     @EventListener(ApplicationReadyEvent.class)
     public void fetchOtherServer() throws Exception {
         String localIp = CommonUtil.getLocalIp();
-        MemberData memberData = restTemplate.getForEntity(managerUrl + "member?name=maida&appId=" + AppId.value + "&ip=" +
+        MemberData memberData = restTemplate.getForEntity(managerUrl + "member?name=" + name + "&appId=" + AppId
+                        .value +
+                        "&ip=" +
                         localIp,
                 MemberData.class).getBody();
         //合法的客户端
         if (memberData.getCode() == 0) {
             List<Member> memberList = memberData.getMembers();
+            logger.info("共有" + memberList.size() + "个成员需要连接：" + memberList.toString());
             for (Member member : memberList) {
                 bindServerGroup(member.getIp(), member.getPort());
             }
@@ -65,16 +70,22 @@ public class ClientStarter {
     /**
      * client在此绑定多个服务器，多个服务器为一个group，将来发消息时发给一个group
      */
-    private void bindServerGroup(String ip, int port) throws Exception {
+    private void bindServerGroup(String ip, int port) {
         //服务器节点
         //Node serverNode = new Node(Const.SERVER, Const.PORT);
         Node serverNode = new Node(ip, port);
 
-        AioClient aioClient = new AioClient(clientGroupContext);
+        try {
+            AioClient aioClient = new AioClient(clientGroupContext);
+            logger.info("开始绑定" + ip + ":" + port);
+            ClientChannelContext clientChannelContext = aioClient.connect(serverNode);
+            //绑group是将要连接的各个服务器节点做为一个group
+            Aio.bindGroup(clientChannelContext, GROUP_NAME);
+        } catch (Exception e) {
+            logger.info("绑定" + ip + "失败");
+        }
 
-        ClientChannelContext clientChannelContext = aioClient.connect(serverNode);
-        //绑group是将要连接的各个服务器节点做为一个group
-        Aio.bindGroup(clientChannelContext, GROUP_NAME);
+
     }
 
     public int halfGroupSize() {
