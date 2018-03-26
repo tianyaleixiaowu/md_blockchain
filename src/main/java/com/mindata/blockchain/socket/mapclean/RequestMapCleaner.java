@@ -1,6 +1,6 @@
 package com.mindata.blockchain.socket.mapclean;
 
-import com.mindata.blockchain.socket.client.RequestResponseMap;
+import com.mindata.blockchain.socket.holder.RequestResponseMap;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 

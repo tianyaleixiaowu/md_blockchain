@@ -2,6 +2,7 @@ package com.mindata.blockchain.socket.client;
 
 import com.mindata.blockchain.core.event.ClientRequestEvent;
 import com.mindata.blockchain.socket.body.BaseBody;
+import com.mindata.blockchain.socket.holder.RequestResponseMap;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;

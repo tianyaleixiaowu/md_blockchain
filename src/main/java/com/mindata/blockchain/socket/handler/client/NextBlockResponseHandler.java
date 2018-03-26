@@ -7,7 +7,7 @@ import com.mindata.blockchain.core.event.AddBlockEvent;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.RpcBlockBody;
 import com.mindata.blockchain.socket.body.RpcCheckBlockBody;
-import com.mindata.blockchain.socket.client.RequestResponseMap;
+import com.mindata.blockchain.socket.holder.RequestResponseMap;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
 import org.slf4j.Logger;

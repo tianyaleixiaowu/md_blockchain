@@ -1,10 +1,13 @@
 package com.mindata.blockchain.socket.handler.client;
 
+import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
+import com.mindata.blockchain.core.event.AddBlockEvent;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.RpcCheckBlockBody;
-import com.mindata.blockchain.socket.client.RequestResponseMap;
 import com.mindata.blockchain.socket.holder.BaseResponse;
+import com.mindata.blockchain.socket.holder.HalfAgreeCallback;
+import com.mindata.blockchain.socket.holder.HalfAgreeChecker;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +37,23 @@ public class GenerateBlockResponseHandler extends AbstractBlockHandler<RpcCheckB
         BaseResponse<Block> baseResponse = new BaseResponse<>(rpcCheckBlockBody);
         baseResponse.setAgree(code == 0);
         baseResponse.setObject(rpcCheckBlockBody.getBlock());
-        RequestResponseMap.add(respId, baseResponse);
+        HalfAgreeChecker.halfCheck(respId, baseResponse, new HalfAgreeCallback() {
+            @Override
+            public void agree() {
+                //发布新生成了区块事件
+                ApplicationContextProvider.publishEvent(new AddBlockEvent(baseResponse.getObject()));
+            }
+
+            @Override
+            public void reject() {
+
+            }
+
+            @Override
+            public void agreeCount(int agreeCount, int rejectCount) {
+                logger.info("已有<" + agreeCount + ">个同意,<" + rejectCount + ">个拒绝");
+            }
+        });
 
         return null;
     }

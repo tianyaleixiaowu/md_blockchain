@@ -7,6 +7,7 @@ import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.BaseBody;
 import com.mindata.blockchain.socket.handler.client.*;
 import com.mindata.blockchain.socket.holder.BaseResponse;
+import com.mindata.blockchain.socket.holder.RequestResponseMap;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
 import com.mindata.blockchain.socket.packet.PacketType;

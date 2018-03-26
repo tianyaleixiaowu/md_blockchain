@@ -23,6 +23,9 @@ public class BaseResponse<T> {
      * 是否同意
      */
     private boolean agree;
+    /**
+     * 回复时带的对象
+     */
     private T object;
 
     public BaseResponse(BaseBody baseBody) {
