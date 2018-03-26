@@ -21,7 +21,7 @@ public class HalfAgreeChecker {
      * @param baseResponse
      *         baseResponse
      */
-    public static void halfCheck(String key, BaseResponse<Block> baseResponse, HalfAgreeCallback halfAgreeCallback) {
+    public synchronized static void halfCheck(String key, BaseResponse<Block> baseResponse, HalfAgreeCallback halfAgreeCallback) {
         if (halfAgreeCallback == null) {
             halfAgreeCallback = new EmptyHalfAgree();
         }

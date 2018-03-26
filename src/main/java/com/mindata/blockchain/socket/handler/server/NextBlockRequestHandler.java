@@ -29,7 +29,7 @@ public class NextBlockRequestHandler extends AbstractBlockHandler<RpcBlockBody> 
 
     @Override
     public synchronized Object handler(BlockPacket packet, RpcBlockBody rpcBlockBody, ChannelContext channelContext) {
-        logger.info("收到<请求某Block的下一Block>消息，请求者的block为：" + Json.toJson(rpcBlockBody));
+        logger.info("收到来自于<" + rpcBlockBody.getAppId() + ">的<请求下一Block>消息，请求者的block为：" + Json.toJson(rpcBlockBody));
         //传来的Block，如果为null，说明发起方连一个Block都没有
         Block block = rpcBlockBody.getBlock();
 
@@ -39,6 +39,7 @@ public class NextBlockRequestHandler extends AbstractBlockHandler<RpcBlockBody> 
         BlockPacket blockPacket = new PacketBuilder<RpcBlockBody>().setType(PacketType
                 .NEXT_BLOCK_INFO_RESPONSE).setBody(respBody).build();
         Aio.send(channelContext, blockPacket);
+        logger.info("回复给<" + rpcBlockBody.getAppId() + ">，我的nextBlock是" + respBody.toString());
 
         return null;
     }

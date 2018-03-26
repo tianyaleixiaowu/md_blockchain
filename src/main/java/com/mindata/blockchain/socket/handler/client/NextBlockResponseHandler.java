@@ -36,7 +36,7 @@ public class NextBlockResponseHandler extends AbstractBlockHandler<RpcBlockBody>
         Block block = rpcBlockBody.getBlock();
         //如果为null，说明对方根据我们传过去的hash，找不到next block。说明要么已经是最新了，要么对方的block比自己的少
         if (block == null) {
-            logger.info("已是最新块了");
+            logger.info("和<" + rpcBlockBody.getAppId() + ">相比，本地已是最新块了");
         } else {
             //此处校验传过来的block的合法性，如果合法，则更新到本地，作为next区块
             CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);

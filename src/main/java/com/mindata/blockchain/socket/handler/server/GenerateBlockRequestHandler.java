@@ -28,8 +28,8 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<RpcBlockBo
     }
 
     @Override
-    public Object handler(BlockPacket packet, RpcBlockBody rpcBlockBody, ChannelContext channelContext) {
-        logger.info("收到来自于<" + rpcBlockBody.getAppId() + "><生成Block>请求消息，block信息为[" + rpcBlockBody.getBlock() + "]");
+    public synchronized Object handler(BlockPacket packet, RpcBlockBody rpcBlockBody, ChannelContext channelContext) {
+        logger.info("收到来自于<" + rpcBlockBody.getAppId() + "><请求生成Block>消息，block信息为[" + rpcBlockBody.getBlock() + "]");
 
         CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);
         RpcCheckBlockBody rpcCheckBlockBody = checkerManager.check(rpcBlockBody.getBlock());
@@ -40,6 +40,7 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<RpcBlockBo
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_BLOCK_RESPONSE).setBody
                 (rpcCheckBlockBody).build();
         Aio.send(channelContext, blockPacket);
+        logger.info("回复是否同意:" + rpcBlockBody.toString());
 
         return null;
     }

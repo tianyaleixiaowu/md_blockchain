@@ -40,6 +40,7 @@ public class GenerateBlockResponseHandler extends AbstractBlockHandler<RpcCheckB
         HalfAgreeChecker.halfCheck(respId, baseResponse, new HalfAgreeCallback() {
             @Override
             public void agree() {
+                logger.info("大家已同意生成block");
                 //发布新生成了区块事件
                 ApplicationContextProvider.publishEvent(new AddBlockEvent(baseResponse.getObject()));
             }
