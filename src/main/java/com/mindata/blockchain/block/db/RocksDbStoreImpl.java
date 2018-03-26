@@ -12,17 +12,11 @@ import java.io.UnsupportedEncodingException;
  * @author wuweifeng wrote on 2018/3/13.
  */
 @Component
-public class DbTool {
+public class RocksDbStoreImpl implements DbStore {
     @Resource
     private RocksDB rocksDB;
 
-    /**
-     * 数据库key value
-     * @param key
-     * key
-     * @param value
-     * value
-     */
+    @Override
     public void put(String key, String value) {
         try {
             rocksDB.put(key.getBytes(Const.CHARSET), value.getBytes(Const.CHARSET));
@@ -31,13 +25,8 @@ public class DbTool {
         }
     }
 
-    /**
-     * get By Key
-     * @param key
-     * key
-     * @return
-     * value
-     */
+
+    @Override
     public String get(String key) {
         try {
             byte[] bytes = rocksDB.get(key.getBytes(Const.CHARSET));
@@ -51,10 +40,7 @@ public class DbTool {
         }
     }
 
-    /**
-     * remove by key
-     * @param key key
-     */
+    @Override
     public void remove(String key) {
         try {
             rocksDB.delete(rocksDB.get(key.getBytes(Const.CHARSET)));

@@ -2,7 +2,7 @@ package com.mindata.blockchain.core.manager;
 
 import cn.hutool.core.util.StrUtil;
 import com.mindata.blockchain.block.Block;
-import com.mindata.blockchain.block.db.DbTool;
+import com.mindata.blockchain.block.db.DbStore;
 import com.mindata.blockchain.common.Constants;
 import com.mindata.blockchain.common.FastJsonUtil;
 import com.mindata.blockchain.core.event.AddBlockEvent;
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 @Service
 public class DbBlockManager {
     @Resource
-    private DbTool dbTool;
+    private DbStore dbStore;
 
     /**
      * 查找第一个区块
@@ -27,7 +27,7 @@ public class DbBlockManager {
      * @return 第一个Block
      */
     public Block getFirstBlock() {
-        String firstBlockHash = dbTool.get(Constants.KEY_FIRST_BLOCK);
+        String firstBlockHash = dbStore.get(Constants.KEY_FIRST_BLOCK);
         if (StrUtil.isEmpty(firstBlockHash)) {
             return null;
         }
@@ -40,13 +40,18 @@ public class DbBlockManager {
      * @return 最后一个区块
      */
     public Block getLastBlock() {
-        String lastBlockHash = dbTool.get(Constants.KEY_LAST_BLOCK);
+        String lastBlockHash = dbStore.get(Constants.KEY_LAST_BLOCK);
         if (StrUtil.isEmpty(lastBlockHash)) {
             return null;
         }
         return getBlockByHash(lastBlockHash);
     }
 
+    /**
+     * 获取最后一个区块的hash
+     * @return
+     * hash
+     */
     public String getLastBlockHash() {
         Block block = getLastBlock();
         if (block != null) {
@@ -54,7 +59,6 @@ public class DbBlockManager {
         }
         return null;
     }
-
 
     /**
      * 获取某一个block的下一个Block
@@ -67,7 +71,7 @@ public class DbBlockManager {
         if (block == null) {
             return getFirstBlock();
         }
-        String nextHash = dbTool.get(Constants.KEY_BLOCK_NEXT_PREFIX + block.getHash());
+        String nextHash = dbStore.get(Constants.KEY_BLOCK_NEXT_PREFIX + block.getHash());
         if (nextHash == null) {
             return null;
         }
@@ -75,7 +79,7 @@ public class DbBlockManager {
     }
 
     public Block getBlockByHash(String hash) {
-        String blockJson = dbTool.get(hash);
+        String blockJson = dbStore.get(hash);
         return FastJsonUtil.toBean(blockJson, Block.class);
     }
 
@@ -91,19 +95,19 @@ public class DbBlockManager {
         Block block = (Block) addBlockEvent.getSource();
         String hash = block.getHash();
         //如果已经存在了，说明已经更新过该Block了
-        if (dbTool.get(hash) != null) {
+        if (dbStore.get(hash) != null) {
             return;
         }
         //存入rocksDB
-        dbTool.put(hash, Json.toJson(block));
+        dbStore.put(hash, Json.toJson(block));
         //设置最后一个block的key value
-        dbTool.put(Constants.KEY_LAST_BLOCK, hash);
+        dbStore.put(Constants.KEY_LAST_BLOCK, hash);
         //如果没有上一区块，说明该块就是创世块
         if (block.getBlockHeader().getHashPreviousBlock() == null) {
-            dbTool.put(Constants.KEY_FIRST_BLOCK, hash);
+            dbStore.put(Constants.KEY_FIRST_BLOCK, hash);
         } else {
             //保存上一区块对该区块的key value映射
-            dbTool.put(Constants.KEY_BLOCK_NEXT_PREFIX + block.getBlockHeader().getHashPreviousBlock(), hash);
+            dbStore.put(Constants.KEY_BLOCK_NEXT_PREFIX + block.getBlockHeader().getHashPreviousBlock(), hash);
         }
 
     }

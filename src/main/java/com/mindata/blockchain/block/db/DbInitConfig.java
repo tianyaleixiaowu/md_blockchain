@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  * @author wuweifeng wrote on 2018/3/13.
  */
 @Configuration
-public class DBConfig {
+public class DbInitConfig {
     static {
         RocksDB.loadLibrary();
     }
