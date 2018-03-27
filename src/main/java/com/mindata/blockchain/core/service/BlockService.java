@@ -78,7 +78,6 @@ public class BlockService {
      * @return Block
      */
     public Block addBlock(BlockRequestBody blockRequestBody) {
-        BlockHeader blockHeader = new BlockHeader();
         com.mindata.blockchain.block.BlockBody blockBody = blockRequestBody.getBlockBody();
         List<Instruction> instructions = blockBody.getInstructions();
         List<InstructionReverse> instructionReverses = blockBody.getInstructionReverses();
@@ -86,6 +85,8 @@ public class BlockService {
                 .toList());
         List<String> reverseHashList = instructionReverses.stream().map(InstructionReverse::getHash).collect(Collectors
                 .toList());
+
+        BlockHeader blockHeader = new BlockHeader();
         blockHeader.setHashList(hashList);
         blockHeader.setReverseHashList(reverseHashList);
 

@@ -73,7 +73,8 @@ public class BlockController {
         com.mindata.blockchain.block.BlockBody blockBody = new com.mindata.blockchain.block.BlockBody();
         blockBody.setInstructionReverses(CollectionUtil.newArrayList(instructionPair.getInstructionReverse()));
         blockBody.setInstructions(CollectionUtil.newArrayList(instructionPair.getInstruction()));
-        blockRequestBody.setBlockBody(blockBody);
+
+       blockRequestBody.setBlockBody(blockBody);
 
         return ResultGenerator.genSuccessResult(blockService.addBlock(blockRequestBody));
     }

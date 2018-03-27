@@ -1,6 +1,5 @@
 package com.mindata.blockchain.core.controller;
 
-import com.mindata.blockchain.core.model.AccountEntity;
 import com.mindata.blockchain.core.model.convert.ConvertTableName;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +21,4 @@ public class IndexController {
         //return codeAreaRepository.findAll();
     }
 
-    @RequestMapping("/class")
-    public Object c() {
-        return convertTableName.convertOf(AccountEntity.class);
-    }
 }

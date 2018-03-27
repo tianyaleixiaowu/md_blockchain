@@ -3,6 +3,9 @@ package com.mindata.blockchain.socket.handler.client;
 import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.core.event.AddBlockEvent;
+import com.mindata.blockchain.core.manager.DbBlockManager;
+import com.mindata.blockchain.core.requestbody.BlockRequestBody;
+import com.mindata.blockchain.core.service.BlockService;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.RpcCheckBlockBody;
 import com.mindata.blockchain.socket.holder.BaseResponse;
@@ -36,13 +39,26 @@ public class GenerateBlockResponseHandler extends AbstractBlockHandler<RpcCheckB
         //将该回复添加到list中，并做过半校验
         BaseResponse<Block> baseResponse = new BaseResponse<>(rpcCheckBlockBody);
         baseResponse.setAgree(code == 0);
-        baseResponse.setObject(rpcCheckBlockBody.getBlock());
+        Block block = rpcCheckBlockBody.getBlock();
+        baseResponse.setObject(block);
         HalfAgreeChecker.halfCheck(respId, baseResponse, new HalfAgreeCallback() {
             @Override
             public void agree() {
                 logger.info("大家已同意生成block");
-                //发布新生成了区块事件
-                ApplicationContextProvider.publishEvent(new AddBlockEvent(baseResponse.getObject()));
+                DbBlockManager dbBlockManager = ApplicationContextProvider.getBean(DbBlockManager.class);
+                //判断是否确实可以生成，避免在大家投票期间，已经拉取了新的区块
+                if(dbBlockManager.checkCanBeNextBlock(block)) {
+                    //发布新生成了区块事件
+                    ApplicationContextProvider.publishEvent(new AddBlockEvent(baseResponse.getObject()));
+                } else {
+                    logger.info("生成新区块时，本地校验不通过！正在重新构建区块，并群发请求");
+                    //重新构建新区块
+                    BlockService blockService = ApplicationContextProvider.getBean(BlockService.class);
+                    BlockRequestBody blockRequestBody = new BlockRequestBody();
+                    blockRequestBody.setBlockBody(block.getBlockBody());
+                    blockRequestBody.setPublicKey(block.getBlockBody().getInstructions().get(0).getPublicKey());
+                    blockService.addBlock(blockRequestBody);
+                }
             }
 
             @Override

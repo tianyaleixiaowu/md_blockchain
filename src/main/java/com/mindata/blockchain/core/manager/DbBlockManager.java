@@ -49,8 +49,8 @@ public class DbBlockManager {
 
     /**
      * 获取最后一个区块的hash
-     * @return
-     * hash
+     *
+     * @return hash
      */
     public String getLastBlockHash() {
         Block block = getLastBlock();
@@ -84,6 +84,23 @@ public class DbBlockManager {
     }
 
     /**
+     * 校验该block能否做为本地的next区块
+     * @param block block
+     * @return true false
+     */
+    public boolean checkCanBeNextBlock(Block block) {
+        Block localLast = getLastBlock();
+        //创世块可以，或者新块的prev等于本地的last hash也可以
+        if (localLast == null && block.getBlockHeader().getHashPreviousBlock() == null) {
+            return true;
+        }
+        if (localLast != null && StrUtil.equals(localLast.getHash(), block.getBlockHeader().getHashPreviousBlock())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 数据库里添加一个新的区块
      *
      * @param addBlockEvent
@@ -98,10 +115,11 @@ public class DbBlockManager {
         if (dbStore.get(hash) != null) {
             return;
         }
-        //存入rocksDB
-        dbStore.put(hash, Json.toJson(block));
-        //设置最后一个block的key value
-        dbStore.put(Constants.KEY_LAST_BLOCK, hash);
+        //校验本地最后一个区块，是否等于该block prevHash
+        if (!checkCanBeNextBlock(block)) {
+            return;
+        }
+
         //如果没有上一区块，说明该块就是创世块
         if (block.getBlockHeader().getHashPreviousBlock() == null) {
             dbStore.put(Constants.KEY_FIRST_BLOCK, hash);
@@ -109,6 +127,10 @@ public class DbBlockManager {
             //保存上一区块对该区块的key value映射
             dbStore.put(Constants.KEY_BLOCK_NEXT_PREFIX + block.getBlockHeader().getHashPreviousBlock(), hash);
         }
+        //存入rocksDB
+        dbStore.put(hash, Json.toJson(block));
+        //设置最后一个block的key value
+        dbStore.put(Constants.KEY_LAST_BLOCK, hash);
 
     }
 
