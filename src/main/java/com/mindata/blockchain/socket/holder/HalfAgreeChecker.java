@@ -26,7 +26,7 @@ public class HalfAgreeChecker {
             halfAgreeCallback = new EmptyHalfAgree();
         }
         List<BaseResponse> baseResponses = RequestResponseMap.get(key);
-        if (baseResponse == null) {
+        if (baseResponses == null) {
             baseResponses = new ArrayList<>();
         }
         //避免同一个机构多次投票
