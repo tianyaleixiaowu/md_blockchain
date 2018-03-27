@@ -47,7 +47,7 @@ public class BlockClientAioHandler extends AbstractAioHandler implements ClientA
      * server端返回的响应会先进到该方法，先做统一的预处理，然后再分发给对应的handler处理各自的
      */
     @Override
-    public synchronized void handler(Packet packet, ChannelContext channelContext) throws Exception {
+    public void handler(Packet packet, ChannelContext channelContext) throws Exception {
         BlockPacket blockPacket = (BlockPacket) packet;
         BaseBody baseBody = Json.toBean(new String(blockPacket.getBody()), BaseBody.class);
         logger.info("收到来自于<" + baseBody.getAppId() + ">针对msg<" + baseBody.getResponseMsgId() + ">的回应");

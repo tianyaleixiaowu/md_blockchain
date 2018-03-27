@@ -5,7 +5,6 @@ import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.socket.client.ClientStarter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,8 +25,9 @@ public class HalfAgreeChecker {
             halfAgreeCallback = new EmptyHalfAgree();
         }
         List<BaseResponse> baseResponses = RequestResponseMap.get(key);
+        //如果针对该msg的key已经不存在了，说明该消息已经处理完了，就不处理了
         if (baseResponses == null) {
-            baseResponses = new ArrayList<>();
+            return;
         }
         //避免同一个机构多次投票
         for (BaseResponse oldResponse : baseResponses) {
