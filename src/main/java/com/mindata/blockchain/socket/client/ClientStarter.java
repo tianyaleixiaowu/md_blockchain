@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.tio.client.AioClient;
@@ -45,8 +46,10 @@ public class ClientStarter {
 
     /**
      * 从麦达区块链管理端获取已登记的各服务器ip
+     * 隔1分钟去获取一次
      */
     @EventListener(ApplicationReadyEvent.class)
+    @Scheduled(fixedRate = 60000)
     public void fetchOtherServer() throws Exception {
         String localIp = CommonUtil.getLocalIp();
         MemberData memberData = restTemplate.getForEntity(managerUrl + "member?name=" + name + "&appId=" + AppId
