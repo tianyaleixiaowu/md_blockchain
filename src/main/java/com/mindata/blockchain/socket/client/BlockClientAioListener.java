@@ -20,14 +20,18 @@ public class BlockClientAioListener implements ClientAioListener {
 
     @Override
     public void onAfterClose(ChannelContext channelContext, Throwable throwable, String s, boolean b) throws Exception {
-        logger.info("连接中断：server地址为-" + channelContext.getServerNode());
+        logger.info("连接关闭：server地址为-" + channelContext.getServerNode());
         Aio.unbindGroup(channelContext);
     }
 
     @Override
-    public void onAfterConnected(ChannelContext channelContext, boolean b, boolean b1) throws Exception {
-        logger.info("连接完毕：server地址为-" + channelContext.getServerNode());
-        Aio.bindGroup(channelContext, GROUP_NAME);
+    public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) throws Exception {
+        if (isConnected) {
+            logger.info("连接成功：server地址为-" + channelContext.getServerNode());
+            Aio.bindGroup(channelContext, GROUP_NAME);
+        } else {
+            logger.info("连接失败：server地址为-" + channelContext.getServerNode());
+        }
     }
 
     @Override

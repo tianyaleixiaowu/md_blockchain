@@ -26,7 +26,7 @@ public class ClientContextConfig {
         //事件监听器，可以为null，但建议自己实现该接口
         ClientAioListener clientAioListener = new BlockClientAioListener();
         //断链后自动连接的，不想自动连接请设为null
-        ReconnConf reconnConf = new ReconnConf(5000L);
+        ReconnConf reconnConf = new ReconnConf(5000L, 20);
         ClientGroupContext clientGroupContext = new ClientGroupContext(clientAioHandler, clientAioListener,
                 reconnConf);
 

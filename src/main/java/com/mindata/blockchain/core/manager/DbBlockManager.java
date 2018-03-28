@@ -6,6 +6,8 @@ import com.mindata.blockchain.block.db.DbStore;
 import com.mindata.blockchain.common.Constants;
 import com.mindata.blockchain.common.FastJsonUtil;
 import com.mindata.blockchain.core.event.AddBlockEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ import javax.annotation.Resource;
 public class DbBlockManager {
     @Resource
     private DbStore dbStore;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 查找第一个区块
@@ -109,6 +112,7 @@ public class DbBlockManager {
     @Order(1)
     @EventListener(AddBlockEvent.class)
     public synchronized void addBlock(AddBlockEvent addBlockEvent) {
+        logger.info("开始生成本地block");
         Block block = (Block) addBlockEvent.getSource();
         String hash = block.getHash();
         //如果已经存在了，说明已经更新过该Block了
@@ -132,6 +136,7 @@ public class DbBlockManager {
         //设置最后一个block的key value
         dbStore.put(Constants.KEY_LAST_BLOCK, hash);
 
+        logger.info("本地已生成新的Block");
     }
 
 }
