@@ -23,6 +23,7 @@ import org.tio.core.Node;
 import org.tio.utils.lock.SetWithLock;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -48,6 +49,8 @@ public class ClientStarter {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
+    private static Set<Node> nodes = new HashSet<>();
+
     /**
      * 从麦达区块链管理端获取已登记的各服务器ip
      * 隔5分钟去获取一次
@@ -67,8 +70,13 @@ public class ClientStarter {
                 List<Member> memberList = memberData.getMembers();
                 logger.info("共有" + memberList.size() + "个成员需要连接：" + memberList.toString());
                 for (Member member : memberList) {
-                    bindServerGroup(member.getIp(), member.getPort());
+                    Node node = new Node(member.getIp(), member.getPort());
+                    if (!nodes.contains(node)) {
+                        bindServerGroup(member.getIp(), member.getPort());
+                        nodes.add(node);
+                    }
                 }
+
             } else {
                 logger.error("不是合法有效的已注册的客户端");
                 System.exit(0);
