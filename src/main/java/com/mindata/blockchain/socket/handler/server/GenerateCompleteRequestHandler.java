@@ -38,7 +38,7 @@ public class GenerateCompleteRequestHandler extends AbstractBlockHandler<RpcBloc
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_COMPLETE_RESPONSE).setBody(baseBody).build();
         Aio.send(channelContext, blockPacket);
 
-        //在这里发请求，去获取对方的新区块
+        //在这里发请求，去获取group别人的新区块
         BlockPacket nextBlockPacket = NextBlockPacketBuilder.build();
         ApplicationContextProvider.getBean(PacketSender.class).sendGroup(nextBlockPacket);
         return null;

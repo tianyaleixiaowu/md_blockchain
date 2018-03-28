@@ -5,9 +5,13 @@ import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.core.bean.Member;
 import com.mindata.blockchain.core.bean.MemberData;
 import com.mindata.blockchain.socket.common.Const;
+import com.mindata.blockchain.socket.packet.BlockPacket;
+import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -31,6 +35,8 @@ import static com.mindata.blockchain.socket.common.Const.GROUP_NAME;
 public class ClientStarter {
     @Resource
     private ClientGroupContext clientGroupContext;
+    @Resource
+    private PacketSender packetSender;
     @Resource
     private RestTemplate restTemplate;
     @Value("${managerUrl}")
@@ -73,6 +79,15 @@ public class ClientStarter {
 
     }
 
+    @EventListener(ApplicationReadyEvent.class)
+    public void fetchNextBlock() throws InterruptedException {
+        logger.info("开始群发信息获取next Block");
+        Thread.sleep(6000);
+        //在这里发请求，去获取group别人的新区块
+        BlockPacket nextBlockPacket = NextBlockPacketBuilder.build();
+        packetSender.sendGroup(nextBlockPacket);
+    }
+
     /**
      * client在此绑定多个服务器，多个服务器为一个group，将来发消息时发给一个group
      */
@@ -90,7 +105,6 @@ public class ClientStarter {
         } catch (Exception e) {
             logger.info("绑定" + ip + "失败");
         }
-
 
     }
 
