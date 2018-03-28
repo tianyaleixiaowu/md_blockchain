@@ -8,7 +8,8 @@ import com.mindata.blockchain.block.Operation;
 import com.mindata.blockchain.common.exception.TrustSDKException;
 import com.mindata.blockchain.core.bean.BaseData;
 import com.mindata.blockchain.core.bean.ResultGenerator;
-import com.mindata.blockchain.core.event.DbAsyncEvent;
+import com.mindata.blockchain.core.event.DbSyncEvent;
+import com.mindata.blockchain.core.manager.MessageManager;
 import com.mindata.blockchain.core.manager.SyncManager;
 import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
@@ -42,6 +43,8 @@ public class BlockController {
     private InstructionService instructionService;
     @Resource
     private SyncManager syncManager;
+    @Resource
+    private MessageManager messageManager;
 
     /**
      * 添加一个block
@@ -79,13 +82,9 @@ public class BlockController {
         return ResultGenerator.genSuccessResult(blockService.addBlock(blockRequestBody));
     }
 
-    @GetMapping("/last")
+    @GetMapping("/sqlite")
     public BaseData lastBlock() {
-        BlockPacket packet = new PacketBuilder<RpcBlockBody>()
-                .setType(PacketType.LAST_BLOCK_INFO_REQUEST)
-                .setBody(new RpcBlockBody()).build();
-        packetSender.sendGroup(packet);
-        return null;
+        return ResultGenerator.genSuccessResult(messageManager.findAll());
     }
 
     @GetMapping("db")
@@ -95,7 +94,7 @@ public class BlockController {
 
     @GetMapping("sync")
     public BaseData async(@PageableDefault Pageable pageable) {
-        ApplicationContextProvider.publishEvent(new DbAsyncEvent(""));
+        ApplicationContextProvider.publishEvent(new DbSyncEvent(""));
         return ResultGenerator.genSuccessResult(syncManager.findAll(pageable));
     }
 

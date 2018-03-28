@@ -1,15 +1,18 @@
 package com.mindata.blockchain.core.manager;
 
 import cn.hutool.core.util.StrUtil;
+import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.block.db.DbStore;
 import com.mindata.blockchain.common.Constants;
 import com.mindata.blockchain.common.FastJsonUtil;
 import com.mindata.blockchain.core.event.AddBlockEvent;
+import com.mindata.blockchain.core.event.DbSyncEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.tio.utils.json.Json;
 
@@ -137,6 +140,18 @@ public class DbBlockManager {
         dbStore.put(Constants.KEY_LAST_BLOCK, hash);
 
         logger.info("本地已生成新的Block");
+
+        //同步到sqlite
+        sqliteSync();
+    }
+
+    /**
+     * sqlite根据block信息，执行sql
+     */
+    @Async
+    public void sqliteSync() {
+        //开始同步到sqlite
+        ApplicationContextProvider.publishEvent(new DbSyncEvent(""));
     }
 
 }

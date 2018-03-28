@@ -4,7 +4,7 @@ import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.block.Instruction;
 import com.mindata.blockchain.block.InstructionReverse;
-import com.mindata.blockchain.core.event.DbAsyncEvent;
+import com.mindata.blockchain.core.event.DbSyncEvent;
 import com.mindata.blockchain.core.manager.SyncManager;
 import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.core.model.SyncEntity;
@@ -37,7 +37,7 @@ public class SqliteManager {
     /**
      * sqlite同步，监听该事件后，去check当前已经同步到哪个区块了，然后继续执行之后的区块
      */
-    @EventListener(DbAsyncEvent.class)
+    @EventListener(DbSyncEvent.class)
     public void dbAsync() {
         logger.info("开始执行导入区块到Sqlite操作");
         //查看同步到哪个区块了
@@ -61,7 +61,7 @@ public class SqliteManager {
             block = dbBlockManager.getNextBlock(dbBlockManager.getBlockByHash(hash));
         }
         execute(block);
-        ApplicationContextProvider.publishEvent(new DbAsyncEvent(""));
+        ApplicationContextProvider.publishEvent(new DbSyncEvent(""));
     }
 
     /**
