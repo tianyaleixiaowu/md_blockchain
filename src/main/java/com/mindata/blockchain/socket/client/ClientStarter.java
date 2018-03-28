@@ -8,8 +8,6 @@ import com.mindata.blockchain.socket.common.Const;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -46,28 +44,33 @@ public class ClientStarter {
 
     /**
      * 从麦达区块链管理端获取已登记的各服务器ip
-     * 隔1分钟去获取一次
+     * 隔5分钟去获取一次
      */
-    @EventListener(ApplicationReadyEvent.class)
-    @Scheduled(fixedRate = 60000)
-    public void fetchOtherServer() throws Exception {
+    @Scheduled(fixedRate = 300000)
+    public void fetchOtherServer() {
         String localIp = CommonUtil.getLocalIp();
-        MemberData memberData = restTemplate.getForEntity(managerUrl + "member?name=" + name + "&appId=" + AppId
-                        .value +
-                        "&ip=" +
-                        localIp,
-                MemberData.class).getBody();
-        //合法的客户端
-        if (memberData.getCode() == 0) {
-            List<Member> memberList = memberData.getMembers();
-            logger.info("共有" + memberList.size() + "个成员需要连接：" + memberList.toString());
-            for (Member member : memberList) {
-                bindServerGroup(member.getIp(), member.getPort());
+        try {
+            //如果连不上服务器，就不让启动
+            MemberData memberData = restTemplate.getForEntity(managerUrl + "member?name=" + name + "&appId=" + AppId
+                            .value +
+                            "&ip=" +
+                            localIp,
+                    MemberData.class).getBody();
+            //合法的客户端
+            if (memberData.getCode() == 0) {
+                List<Member> memberList = memberData.getMembers();
+                logger.info("共有" + memberList.size() + "个成员需要连接：" + memberList.toString());
+                for (Member member : memberList) {
+                    bindServerGroup(member.getIp(), member.getPort());
+                }
+            } else {
+                logger.error("不是合法有效的已注册的客户端");
+                System.exit(0);
             }
-        } else {
-            logger.error("不是合法有效的已注册的客户端");
-            //System.exit(0);
+        } catch (Exception e) {
+            System.exit(0);
         }
+
     }
 
     /**
