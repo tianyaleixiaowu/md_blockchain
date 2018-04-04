@@ -82,6 +82,7 @@ public class ClientStarter {
                 System.exit(0);
             }
         } catch (Exception e) {
+            logger.error("请先启动md_blockchain_manager服务，并配置appId等属性，只有合法联盟链成员才能启动该服务");
             System.exit(0);
         }
 

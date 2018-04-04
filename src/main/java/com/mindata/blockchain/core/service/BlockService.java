@@ -5,7 +5,6 @@ import cn.hutool.core.util.StrUtil;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.block.BlockHeader;
 import com.mindata.blockchain.block.Instruction;
-import com.mindata.blockchain.block.InstructionReverse;
 import com.mindata.blockchain.block.merkle.MerkleTree;
 import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.common.Sha256;
@@ -21,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -80,22 +78,14 @@ public class BlockService {
     public Block addBlock(BlockRequestBody blockRequestBody) {
         com.mindata.blockchain.block.BlockBody blockBody = blockRequestBody.getBlockBody();
         List<Instruction> instructions = blockBody.getInstructions();
-        List<InstructionReverse> instructionReverses = blockBody.getInstructionReverses();
         List<String> hashList = instructions.stream().map(Instruction::getHash).collect(Collectors
-                .toList());
-        List<String> reverseHashList = instructionReverses.stream().map(InstructionReverse::getHash).collect(Collectors
                 .toList());
 
         BlockHeader blockHeader = new BlockHeader();
         blockHeader.setHashList(hashList);
-        blockHeader.setReverseHashList(reverseHashList);
 
-        List<String> tempHashList = new ArrayList<>();
-        //合并hashList用来计算merkle root
-        tempHashList.addAll(hashList);
-        tempHashList.addAll(reverseHashList);
         //计算所有指令的hashRoot
-        blockHeader.setHashMerkleRoot(new MerkleTree(tempHashList).build().getRoot());
+        blockHeader.setHashMerkleRoot(new MerkleTree(hashList).build().getRoot());
         blockHeader.setPublicKey(blockRequestBody.getPublicKey());
         blockHeader.setTimeStamp(CommonUtil.getNow());
         blockHeader.setVersion(version);

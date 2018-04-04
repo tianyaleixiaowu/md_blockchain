@@ -4,23 +4,11 @@ package com.mindata.blockchain.block;
  * 区块body内一条指令
  * @author wuweifeng wrote on 2018/3/2.
  */
-public class Instruction {
+public class Instruction extends InstructionBase {
     /**
-     * 指令的操作，增删改（1，-1，2）
-     */
-    private byte operation;
-    /**
-     * 操作的model对象，对应一张表
-     */
-    private String table;
-    /**
-     * 具体内容
+     * 新的内容
      */
     private String json;
-    /**
-     * 业务id，sql语句中where需要该Id
-     */
-    private String instructionId;
     /**
      * 时间戳
      */
@@ -38,13 +26,6 @@ public class Instruction {
      */
     private String hash;
 
-    public byte getOperation() {
-        return operation;
-    }
-
-    public void setOperation(byte operation) {
-        this.operation = operation;
-    }
 
     public String getJson() {
         return json;
@@ -70,28 +51,12 @@ public class Instruction {
         this.timeStamp = timeStamp;
     }
 
-    public String getTable() {
-        return table;
-    }
-
-    public void setTable(String table) {
-        this.table = table;
-    }
-
     public String getSign() {
         return sign;
     }
 
     public void setSign(String sign) {
         this.sign = sign;
-    }
-
-    public String getInstructionId() {
-        return instructionId;
-    }
-
-    public void setInstructionId(String instructionId) {
-        this.instructionId = instructionId;
     }
 
     public String getHash() {
@@ -105,10 +70,7 @@ public class Instruction {
     @Override
     public String toString() {
         return "Instruction{" +
-                "operation=" + operation +
-                ", table='" + table + '\'' +
-                ", json='" + json + '\'' +
-                ", instructionId='" + instructionId + '\'' +
+                "json='" + json + '\'' +
                 ", timeStamp=" + timeStamp +
                 ", publicKey='" + publicKey + '\'' +
                 ", sign='" + sign + '\'' +

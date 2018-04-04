@@ -9,13 +9,17 @@ public class InstructionBody {
      */
     private byte operation;
     /**
-     * 操作的model对象，对应一张表
+     * 操作的表名
      */
     private String table;
     /**
      * 具体内容
      */
     private String json;
+    /**
+     * 原始内容
+     */
+    private String oldJson;
     /**
      * 业务id
      */
@@ -35,10 +39,19 @@ public class InstructionBody {
                 "operation=" + operation +
                 ", table='" + table + '\'' +
                 ", json='" + json + '\'' +
+                ", oldJson='" + oldJson + '\'' +
                 ", instructionId='" + instructionId + '\'' +
                 ", privateKey='" + privateKey + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 '}';
+    }
+
+    public String getOldJson() {
+        return oldJson;
+    }
+
+    public void setOldJson(String oldJson) {
+        this.oldJson = oldJson;
     }
 
     public String getInstructionId() {

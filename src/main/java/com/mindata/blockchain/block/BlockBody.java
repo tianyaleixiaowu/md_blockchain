@@ -8,22 +8,12 @@ import java.util.List;
  */
 public class BlockBody {
     private List<Instruction> instructions;
-    private List<InstructionReverse> instructionReverses;
 
     @Override
     public String toString() {
         return "BlockBody{" +
                 "instructions=" + instructions +
-                ", instructionReverses=" + instructionReverses +
                 '}';
-    }
-
-    public List<InstructionReverse> getInstructionReverses() {
-        return instructionReverses;
-    }
-
-    public void setInstructionReverses(List<InstructionReverse> instructionReverses) {
-        this.instructionReverses = instructionReverses;
     }
 
     public List<Instruction> getInstructions() {

@@ -39,10 +39,6 @@ public class BlockHeader {
      * 该区块里每条交易信息的hash集合，按顺序来的，通过该hash集合能算出根节点hash
      */
     private List<String> hashList;
-    /**
-     * 所有交易回滚指令的hash集合
-     */
-    private List<String> reverseHashList;
 
     @Override
     public String toString() {
@@ -55,16 +51,7 @@ public class BlockHeader {
                 ", timeStamp=" + timeStamp +
                 ", nonce=" + nonce +
                 ", hashList=" + hashList +
-                ", reverseHashList=" + reverseHashList +
                 '}';
-    }
-
-    public List<String> getReverseHashList() {
-        return reverseHashList;
-    }
-
-    public void setReverseHashList(List<String> reverseHashList) {
-        this.reverseHashList = reverseHashList;
     }
 
     public int getVersion() {

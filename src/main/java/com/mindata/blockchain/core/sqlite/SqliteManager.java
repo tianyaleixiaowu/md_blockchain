@@ -3,11 +3,13 @@ package com.mindata.blockchain.core.sqlite;
 import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.block.Instruction;
+import com.mindata.blockchain.block.InstructionBase;
 import com.mindata.blockchain.block.InstructionReverse;
 import com.mindata.blockchain.core.event.DbSyncEvent;
 import com.mindata.blockchain.core.manager.SyncManager;
 import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.core.model.SyncEntity;
+import com.mindata.blockchain.core.service.InstructionService;
 import com.mindata.blockchain.core.sqlparser.InstructionParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,8 @@ public class SqliteManager {
     private SyncManager syncManager;
     @Resource
     private DbBlockManager dbBlockManager;
+    @Resource
+    private InstructionService instructionService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -86,18 +90,18 @@ public class SqliteManager {
      *         block
      */
     private void rollBack(Block block) {
-        List<InstructionReverse> instructionReverses = block.getBlockBody().getInstructionReverses();
-        int size = instructionReverses.size();
-        //需要对语句进行反转，然后执行和execute一样的操作
-        List<Instruction> instructions = new ArrayList<>(size);
+        List<Instruction> instructions = block.getBlockBody().getInstructions();
+        int size = instructions.size();
+        //需要对语句集合进行反转，然后执行和execute一样的操作
+        List<InstructionReverse> instructionReverses = new ArrayList<>(size);
         for (int i = size - 1; i >= 0; i--) {
-            instructions.add(instructionReverses.get(i));
+            instructionReverses.add(instructionService.buildReverse(instructions.get(i)));
         }
-        doSqlParse(instructions);
+        doSqlParse(instructionReverses);
     }
 
-    private void doSqlParse(List<Instruction> instructions) {
-        for (Instruction instruction : instructions) {
+    private <T extends InstructionBase> void doSqlParse(List<T> instructions) {
+        for (InstructionBase instruction : instructions) {
             instructionParser.parse(instruction);
         }
     }

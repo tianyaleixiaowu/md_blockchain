@@ -3,15 +3,15 @@ package com.mindata.blockchain.core.controller;
 import cn.hutool.core.collection.CollectionUtil;
 import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
-import com.mindata.blockchain.block.InstructionPair;
+import com.mindata.blockchain.block.Instruction;
 import com.mindata.blockchain.block.Operation;
 import com.mindata.blockchain.common.exception.TrustSDKException;
 import com.mindata.blockchain.core.bean.BaseData;
 import com.mindata.blockchain.core.bean.ResultGenerator;
 import com.mindata.blockchain.core.event.DbSyncEvent;
+import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.core.manager.MessageManager;
 import com.mindata.blockchain.core.manager.SyncManager;
-import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
 import com.mindata.blockchain.core.requestbody.InstructionBody;
 import com.mindata.blockchain.core.service.BlockService;
@@ -69,20 +69,19 @@ public class BlockController {
         instructionBody.setJson("{\"content\":\"" + content + "\"}");
         instructionBody.setPublicKey("A8WLqHTjcT/FQ2IWhIePNShUEcdCzu5dG+XrQU8OMu54");
         instructionBody.setPrivateKey("yScdp6fNgUU+cRUTygvJG4EBhDKmOMRrK4XJ9mKVQJ8=");
-        InstructionPair instructionPair = instructionService.build(instructionBody);
+        Instruction instruction = instructionService.build(instructionBody);
 
         BlockRequestBody blockRequestBody = new BlockRequestBody();
         blockRequestBody.setPublicKey("A8WLqHTjcT/FQ2IWhIePNShUEcdCzu5dG+XrQU8OMu54");
         com.mindata.blockchain.block.BlockBody blockBody = new com.mindata.blockchain.block.BlockBody();
-        blockBody.setInstructionReverses(CollectionUtil.newArrayList(instructionPair.getInstructionReverse()));
-        blockBody.setInstructions(CollectionUtil.newArrayList(instructionPair.getInstruction()));
+        blockBody.setInstructions(CollectionUtil.newArrayList(instruction));
 
        blockRequestBody.setBlockBody(blockBody);
 
         return ResultGenerator.genSuccessResult(blockService.addBlock(blockRequestBody));
     }
 
-    @GetMapping("/sqlite")
+    @GetMapping("sqlite")
     public BaseData lastBlock() {
         return ResultGenerator.genSuccessResult(messageManager.findAll());
     }
