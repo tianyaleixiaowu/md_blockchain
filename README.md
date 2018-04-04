@@ -28,3 +28,27 @@ Block存储采用的是key-value数据库rocksDB，了解比特币的知道，�
 
 网络层，采用的是各节点互相长连接、断线重连，然后维持心跳包。任何一个节点都可以生成Block，不同于比特币的挖矿和其他的需要先选举。
 生成Block时需要全网广播，等待其他节点的校验（校验格式、hash、签名、和table的权限），校验通过后，过半同意了，就可以构建Block并广播全网，通知各节点更新Block。
+
+我把项目部署到docker里了，共启动4个节点，如图：
+![输入图片说明](https://gitee.com/uploads/images/2018/0404/105151_c8931604_303698.png "1.png")
+
+manager就是md_blockchain_manager项目，主要功能就是提供联盟链内各节点ip
+![输入图片说明](https://gitee.com/uploads/images/2018/0404/105409_5e24cb3a_303698.png "1.png")
+
+四个节点ip都写死了，都启动后，它们会相互全部连接起来，并维持住长连接和心跳包。
+![输入图片说明](https://gitee.com/uploads/images/2018/0404/105748_bc6896d8_303698.png "1.png")
+
+我调用一下block项目的生成区块接口，http://ip:port/block?content=1
+
+![输入图片说明](https://gitee.com/uploads/images/2018/0404/105945_9e7f946f_303698.png "1.png")
+
+别的节点会是这样，收到block项目请求生成区块的请求、并开始校验，回复是否同意
+![输入图片说明](https://gitee.com/uploads/images/2018/0404/110142_cae21d7f_303698.png "1.png")
+
+当block项目收到过半的同意后，就开始生成区块，并广播给其他节点自己的新区块，其他节点开始拉取新块，校验通过了则更新到本地。
+
+这个生成区块的接口是写好用来测试的，正常走的流程是调用instuction接口，先生产符合自己需求的指令，然后组合多个指令，调用BlockController里的生成区块接口。
+
+
+
+
