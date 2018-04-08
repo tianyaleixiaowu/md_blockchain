@@ -19,12 +19,6 @@ public class BlockClientAioListener implements ClientAioListener {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void onAfterClose(ChannelContext channelContext, Throwable throwable, String s, boolean b) throws Exception {
-        logger.info("连接关闭：server地址为-" + channelContext.getServerNode());
-        Aio.unbindGroup(channelContext);
-    }
-
-    @Override
     public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) throws Exception {
         if (isConnected) {
             logger.info("连接成功：server地址为-" + channelContext.getServerNode());
@@ -35,7 +29,18 @@ public class BlockClientAioListener implements ClientAioListener {
     }
 
     @Override
-    public void onAfterReceived(ChannelContext channelContext, Packet packet, int i) throws Exception {
+    public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String s, boolean b) {
+        logger.info("连接关闭：server地址为-" + channelContext.getServerNode());
+        Aio.unbindGroup(channelContext);
+    }
+
+    @Override
+    public void onAfterDecoded(ChannelContext channelContext, Packet packet, int i) throws Exception {
+
+    }
+
+    @Override
+    public void onAfterReceivedBytes(ChannelContext channelContext, int i) throws Exception {
 
     }
 
@@ -45,7 +50,8 @@ public class BlockClientAioListener implements ClientAioListener {
     }
 
     @Override
-    public void onBeforeClose(ChannelContext channelContext, Throwable throwable, String s, boolean b) {
+    public void onAfterHandled(ChannelContext channelContext, Packet packet, long l) throws Exception {
 
     }
+
 }

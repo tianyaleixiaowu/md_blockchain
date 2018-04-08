@@ -16,11 +16,6 @@ public class BlockServerAioListener implements ServerAioListener {
 	private static Logger log = LoggerFactory.getLogger(BlockServerAioListener.class);
 
 	@Override
-	public void onAfterClose(ChannelContext channelContext, Throwable throwable, String remark, boolean isRemove) {
-		log.info("onAfterClose channelContext:{}, throwable:{}, remark:{}, isRemove:{}", channelContext, throwable, remark, isRemove);
-	}
-
-	@Override
 	public void onAfterConnected(ChannelContext channelContext, boolean isConnected, boolean isReconnect) {
 		log.info("onAfterConnected channelContext:{}, isConnected:{}, isReconnect:{}", channelContext, isConnected, isReconnect);
 
@@ -29,13 +24,24 @@ public class BlockServerAioListener implements ServerAioListener {
 	}
 
 	@Override
-	public void onAfterReceived(ChannelContext channelContext, Packet packet, int packetSize) {
-		log.info("onAfterReceived channelContext:{}, packet:{}, packetSize:{}", channelContext, Json.toJson(packet), packetSize);
+	public void onAfterDecoded(ChannelContext channelContext, Packet packet, int i) throws Exception {
+
 	}
+
+	@Override
+	public void onAfterReceivedBytes(ChannelContext channelContext, int i) throws Exception {
+		log.info("onAfterReceived channelContext:{}, packet:{}, packetSize:{}");
+	}
+
 
 	@Override
 	public void onAfterSent(ChannelContext channelContext, Packet packet, boolean isSentSuccess) {
 		log.info("onAfterSent channelContext:{}, packet:{}, isSentSuccess:{}", channelContext, Json.toJson(packet), isSentSuccess);
+	}
+
+	@Override
+	public void onAfterHandled(ChannelContext channelContext, Packet packet, long l) throws Exception {
+
 	}
 
 	@Override

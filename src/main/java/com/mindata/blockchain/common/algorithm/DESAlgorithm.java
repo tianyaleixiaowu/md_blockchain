@@ -10,7 +10,6 @@
 package com.mindata.blockchain.common.algorithm;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import java.security.Key;
@@ -21,9 +20,7 @@ import java.security.Key;
  * Reason:	 TODO ADD REASON. <br/>
  * Date:     Jul 28, 2017 10:38:59 AM <br/>
  * @author   Rony
- * @version  
  * @since    JDK 1.7
- * @see 	 
  */
 public class DESAlgorithm {
     /**
@@ -49,8 +46,7 @@ public class DESAlgorithm {
         // 实例化密钥工厂
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance(KEY_ALGORITHM);
         // 生成密钥
-        SecretKey secretKey = keyFactory.generateSecret(dks);
-        return secretKey;
+        return keyFactory.generateSecret(dks);
     }
 
     /**

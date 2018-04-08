@@ -17,9 +17,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Date: Jul 26, 2017 2:48:58 PM <br/>
  * 
  * @author Rony
- * @version
  * @since JDK 1.7
- * @see
  */
 public class AESAlgorithm {
 
@@ -29,36 +27,31 @@ public class AESAlgorithm {
 	 * @author Rony
 	 * @param key
 	 *            秘钥
-	 * @param plainText
+	 * @param data
 	 *            明文
-	 * @return
-	 * @throws Exception
-	 * @since JDK 1.7
 	 */
 	public static byte[] aesEncode(byte[] key, byte[] data) throws Exception {
 		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		cipher.init(Cipher.ENCRYPT_MODE, secretKey);
-		byte[] cipherText = cipher.doFinal(data);
-		return cipherText;
+		return cipher.doFinal(data);
 	}
 
 	/**
 	 * aesDecode: aes 解密. <br/>
 	 *
 	 * @author Rony
-	 * @param key
-	 * @param encryptedText
-	 * @return
-	 * @throws Exception
+	 * @param key key
+	 * @param encryptedText  encryptedText
+	 * @return encryptedText
+	 * @throws Exception Exception
 	 * @since JDK 1.7
 	 */
-	public static byte[] aesDecode(byte[] key, byte[] data) throws Exception {
+	public static byte[] aesDecode(byte[] key, byte[] encryptedText) throws Exception {
 		Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5PADDING");
 		SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
 		cipher.init(Cipher.DECRYPT_MODE, secretKey);
-		byte[] result = cipher.doFinal(data);  
-		return result;
+		return cipher.doFinal(encryptedText);
 	}
 
 }

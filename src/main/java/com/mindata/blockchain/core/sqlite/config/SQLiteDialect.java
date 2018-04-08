@@ -26,6 +26,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 /**
+ * sqlite方言，目的是使用Hibernate jpa操作SQLite
  * @author wuweifeng wrote on 2018/3/2.
  */
 public class SQLiteDialect extends Dialect {

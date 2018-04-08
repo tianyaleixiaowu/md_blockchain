@@ -31,8 +31,8 @@ public class BaseAlgorithm {
 	/**
 	 * encode bytes
 	 * 
-	 * @param algorithm
-	 * @param data
+	 * @param algorithm  algorithm
+	 * @param data  data
 	 * @return byte[]
 	 */
 	public static byte[] encode(String algorithm, byte[] data) {
@@ -51,8 +51,8 @@ public class BaseAlgorithm {
 	/**
 	 * encodeTwice bytes
 	 *
-	 * @param algorithm
-	 * @param data
+	 * @param algorithm  algorithm
+	 * @param data data
 	 * @return byte[]
 	 */
 	protected static byte[] encodeTwice(String algorithm, byte[] data) {

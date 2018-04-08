@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
+ * 区块校验
  * @author wuweifeng wrote on 2018/3/14.
  */
 @Component
@@ -18,6 +19,11 @@ public class CheckerManager {
     @Resource
     private DbBlockManager dbBlockManager;
 
+    /**
+     * 基本校验
+     * @param block block
+     * @return 校验结果
+     */
     public RpcCheckBlockBody check(Block block) {
         int number = blockChecker.checkNum(block);
         if (number != 0) {
