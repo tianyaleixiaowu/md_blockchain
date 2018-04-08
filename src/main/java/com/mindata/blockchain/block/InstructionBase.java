@@ -14,7 +14,7 @@ public class InstructionBase {
      */
     private String table;
     /**
-     * 原始内容（主要用于update和delete操作时，将来可能回滚需要的原始数据）
+     * 最终要执行入库的json内容
      */
     private String oldJson;
     /**

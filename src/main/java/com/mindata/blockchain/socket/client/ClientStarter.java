@@ -102,7 +102,6 @@ public class ClientStarter {
      */
     private void bindServerGroup(String ip, int port) {
         //服务器节点
-        //Node serverNode = new Node(Const.SERVER, Const.PORT);
         Node serverNode = new Node(ip, port);
 
         try {

@@ -76,6 +76,10 @@ public class SqliteManager {
      */
     private void execute(Block block) {
         List<Instruction> instructions = block.getBlockBody().getInstructions();
+        //InstructionParserImpl类里面执行的是InstructionBase，需要转成InstructionBase
+        for (Instruction instruction : instructions) {
+            instruction.setOldJson(instruction.getJson());
+        }
         doSqlParse(instructions);
 
         SyncEntity syncEntity = new SyncEntity();

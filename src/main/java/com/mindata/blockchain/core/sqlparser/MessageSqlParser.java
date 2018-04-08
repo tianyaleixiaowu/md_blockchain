@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
 /**
+ * 解析语句入库的具体实现，Message表的
  * @author wuweifeng wrote on 2018/3/21.
  */
 @Service
