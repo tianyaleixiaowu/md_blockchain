@@ -13,7 +13,7 @@ Block内存储的是类Sql语句，各节点通过达成过半同意后即可生
 
 如果因为某些原因导致链分叉了，也提供了回滚机制，sql可以回滚。
 
-使用方法：先启动md_blockchain_manager项目（https://gitee.com/tianyalei/md_blockchain_manager）,然后修改application
+使用方法：先启动md_blockchain_manager项目https://gitee.com/tianyalei/md_blockchain_manager，然后修改application
 .yml里的name、appid和managerUrl和manager项目数据库里的一一对应，作为一个节点启动即可。
 
 可以通过访问localhost:8080/block?content=1来生成一个区块，至少要启动2个节点才行，生成Block时需要除自己外的至少过半同意才行。生成Block后就会发现别的节点也会自动同步自己新生成的Block。
