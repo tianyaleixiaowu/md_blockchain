@@ -20,10 +20,6 @@ public class Member {
      * ip（可不设置，由该成员客户端启动后自行检测）
      */
     private String ip;
-    /**
-     * 成员客户端端口号
-     */
-    private Integer port;
 
     private Date createTime;
 
@@ -35,7 +31,6 @@ public class Member {
                 "appId='" + appId + '\'' +
                 ", name='" + name + '\'' +
                 ", ip='" + ip + '\'' +
-                ", port=" + port +
                 '}';
     }
 
@@ -63,11 +58,4 @@ public class Member {
         this.ip = ip;
     }
 
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
-    }
 }

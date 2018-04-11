@@ -4,6 +4,9 @@ import com.mindata.blockchain.common.AppId;
 import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.core.bean.Member;
 import com.mindata.blockchain.core.bean.MemberData;
+import com.mindata.blockchain.core.bean.Permission;
+import com.mindata.blockchain.core.bean.PermissionData;
+import com.mindata.blockchain.core.manager.PermissionManager;
 import com.mindata.blockchain.socket.common.Const;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
@@ -40,6 +43,8 @@ public class ClientStarter {
     private PacketSender packetSender;
     @Resource
     private RestTemplate restTemplate;
+    @Resource
+    private PermissionManager permissionManager;
     @Value("${managerUrl}")
     private String managerUrl;
     @Value("${appId}")
@@ -70,15 +75,40 @@ public class ClientStarter {
                 List<Member> memberList = memberData.getMembers();
                 logger.info("共有" + memberList.size() + "个成员需要连接：" + memberList.toString());
                 for (Member member : memberList) {
-                    Node node = new Node(member.getIp(), member.getPort());
+                    Node node = new Node(member.getIp(), Const.PORT);
                     if (!nodes.contains(node)) {
-                        bindServerGroup(member.getIp(), member.getPort());
+                        bindServerGroup(member.getIp(), Const.PORT);
                         nodes.add(node);
                     }
                 }
 
             } else {
                 logger.error("不是合法有效的已注册的客户端");
+                System.exit(0);
+            }
+        } catch (Exception e) {
+            logger.error("请先启动md_blockchain_manager服务，并配置appId等属性，只有合法联盟链成员才能启动该服务");
+            System.exit(0);
+        }
+
+    }
+
+    /**
+     * 从麦达区块链管理端获取权限信息，一天获取一次即可
+     */
+    @Scheduled(fixedRate = 1000 * 60 * 60 * 24, initialDelay = 2000)
+    public void fetchPermission() {
+        String localIp = CommonUtil.getLocalIp();
+        try {
+            //如果连不上服务器，就不让启动
+            PermissionData permissionData = restTemplate.getForEntity(managerUrl + "permission?name=" + name,
+                    PermissionData.class).getBody();
+            //获取到权限
+            if (permissionData.getCode() == 0) {
+                List<Permission> permissionList = permissionData.getPermissions();
+                permissionManager.savePermissionList(permissionList);
+            } else {
+                logger.error("无法获取权限信息");
                 System.exit(0);
             }
         } catch (Exception e) {

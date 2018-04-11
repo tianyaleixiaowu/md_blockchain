@@ -3,17 +3,21 @@ package com.mindata.blockchain.block.check.local;
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.block.check.BlockChecker;
 import com.mindata.blockchain.core.manager.DbBlockManager;
+import com.mindata.blockchain.core.manager.PermissionManager;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
 /**
+ * 使用本地存储的权限、Block信息对新来的block进行校验
  * @author wuweifeng wrote on 2018/3/13.
  */
 @Component
 public class DbBlockChecker implements BlockChecker {
     @Resource
     private DbBlockManager dbBlockManager;
+    @Resource
+    private PermissionManager permissionManager;
 
     @Override
     public int checkNum(Block block) {
@@ -30,7 +34,8 @@ public class DbBlockChecker implements BlockChecker {
 
     @Override
     public int checkPermission(Block block) {
-        return 0;
+        //校验对表的操作权限
+        return permissionManager.checkPermission(block) ? 0 : -1;
     }
 
     @Override

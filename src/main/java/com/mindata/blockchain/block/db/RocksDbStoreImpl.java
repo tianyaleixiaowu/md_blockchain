@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 
 /**
+ * rocksDB对于存储接口的实现
  * @author wuweifeng wrote on 2018/3/13.
  */
 @Component

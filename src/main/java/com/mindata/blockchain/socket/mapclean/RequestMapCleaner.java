@@ -5,7 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * 定时清理
+ * 定时清理发出的Message的缓存，避免长时间没回应没处理的message占空间
  * @author wuweifeng wrote on 2018/3/20.
  */
 @Component

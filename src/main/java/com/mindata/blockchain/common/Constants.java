@@ -49,5 +49,9 @@ public interface Constants {
      * 保存区块的hash和下一区块hash，key为hash，value为下一区块hash
      */
 	String KEY_BLOCK_NEXT_PREFIX = "key_next_";
+	/**
+	 * 每个表的权限存储key
+	 */
+	String KEY_PERMISSION = "key_permission_";
 }
 

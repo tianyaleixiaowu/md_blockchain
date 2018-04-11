@@ -33,6 +33,10 @@ public class CheckerManager {
         if (time != 0) {
             return new RpcCheckBlockBody(-4, "block的时间错误");
         }
+        int permission = blockChecker.checkPermission(block);
+        if (permission != 0) {
+            return new RpcCheckBlockBody(-2, "没有表的操作权限");
+        }
 
         return new RpcCheckBlockBody(0, "OK", block);
     }

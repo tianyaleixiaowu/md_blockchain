@@ -10,6 +10,7 @@ import com.mindata.blockchain.common.CommonUtil;
 import com.mindata.blockchain.common.Sha256;
 import com.mindata.blockchain.common.exception.TrustSDKException;
 import com.mindata.blockchain.core.manager.DbBlockManager;
+import com.mindata.blockchain.core.manager.PermissionManager;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
 import com.mindata.blockchain.socket.body.RpcBlockBody;
 import com.mindata.blockchain.socket.client.PacketSender;
@@ -36,6 +37,8 @@ public class BlockService {
     private PacketSender packetSender;
     @Resource
     private DbBlockManager dbBlockManager;
+    @Resource
+    private PermissionManager permissionManager;
 
     /**
      * 校验指令集是否合法
@@ -65,6 +68,10 @@ public class BlockService {
             if (!instructionService.checkHash(instruction)) {
                 return "Hash校验不通过";
             }
+        }
+
+        if (!permissionManager.checkPermission(instructions)) {
+            return "权限校验不通过";
         }
 
         return null;

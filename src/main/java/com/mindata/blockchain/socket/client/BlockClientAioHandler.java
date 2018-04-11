@@ -39,12 +39,13 @@ public class BlockClientAioHandler extends AbstractAioHandler implements ClientA
 
     @Override
     public BlockPacket heartbeatPacket() {
-        //心跳包的内容就是隔一段时间向别的server获取一次别的最新的区块
+        //心跳包的内容就是隔一段时间向别的节点获取一次下一步区块（带着自己的最新Block获取别人的next Block）
         return NextBlockPacketBuilder.build();
     }
 
     /**
-     * server端返回的响应会先进到该方法，先做统一的预处理，然后再分发给对应的handler处理各自的
+     * server端返回的响应会先进到该方法，先做统一的预处理，然后再分发给对应的handler处理各自的<p>
+     * 这里是所有server端给响应的入口，会有性能瓶颈，我猜的，我要用Disruptor来解决性能问题
      */
     @Override
     public void handler(Packet packet, ChannelContext channelContext) throws Exception {
@@ -67,6 +68,5 @@ public class BlockClientAioHandler extends AbstractAioHandler implements ClientA
         Byte type = blockPacket.getType();
         AbstractBlockHandler<?> blockHandler = handlerMap.get(type);
         blockHandler.handler(blockPacket, channelContext);
-        //ApplicationContextProvider.publishEvent(new ServerResponseEvent((BlockPacket) packet));
     }
 }

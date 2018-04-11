@@ -17,7 +17,7 @@ public abstract class AbstractSqlParser<T extends BaseEntity> {
     /**
      * 对象的类
      *
-     * @return
+     * @return Class
      */
     abstract Class getEntityClass();
 }
