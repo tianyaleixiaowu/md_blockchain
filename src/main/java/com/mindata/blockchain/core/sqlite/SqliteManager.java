@@ -42,7 +42,7 @@ public class SqliteManager {
      * sqlite同步，监听该事件后，去check当前已经同步到哪个区块了，然后继续执行之后的区块
      */
     @EventListener(DbSyncEvent.class)
-    public void dbAsync() {
+    public void dbSync() {
         logger.info("开始执行导入区块到Sqlite操作");
         //查看同步到哪个区块了
         SyncEntity syncEntity = syncManager.findLastOne();
@@ -54,13 +54,12 @@ public class SqliteManager {
             logger.info("正在导入第一个区块，hash为：" + block.getHash());
         } else {
             Block lastBlock = dbBlockManager.getLastBlock();
-            logger.info("正在导入区块，hash为：" + lastBlock.getHash());
             //已经同步到最后一块了
             if (lastBlock.getHash().equals(syncEntity.getHash())) {
                 logger.info("导入完毕");
                 return;
             }
-
+            logger.info("正在导入区块，hash为：" + lastBlock.getHash());
             String hash = syncEntity.getHash();
             block = dbBlockManager.getNextBlock(dbBlockManager.getBlockByHash(hash));
         }
@@ -82,6 +81,7 @@ public class SqliteManager {
         }
         doSqlParse(instructions);
 
+        //保存已同步的进度
         SyncEntity syncEntity = new SyncEntity();
         syncEntity.setHash(block.getHash());
         syncManager.save(syncEntity);

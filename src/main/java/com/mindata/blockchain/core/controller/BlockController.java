@@ -47,7 +47,7 @@ public class BlockController {
     private MessageManager messageManager;
 
     /**
-     * 添加一个block
+     * 添加一个block，需要先在InstructionController构建1-N个instruction指令，然后调用该接口生成Block
      *
      * @param blockRequestBody
      *         指令的集合
@@ -61,6 +61,11 @@ public class BlockController {
         return ResultGenerator.genSuccessResult(blockService.addBlock(blockRequestBody));
     }
 
+    /**
+     * 测试生成一个Block，公钥私钥可以通过PairKeyController来生成
+     * @param content
+     * sql内容
+     */
     @GetMapping
     public BaseData test(String content) throws Exception {
         InstructionBody instructionBody = new InstructionBody();
@@ -81,18 +86,31 @@ public class BlockController {
         return ResultGenerator.genSuccessResult(blockService.addBlock(blockRequestBody));
     }
 
+    /**
+     * 查询已落地的sqlite里的所有数据
+     */
     @GetMapping("sqlite")
-    public BaseData lastBlock() {
+    public BaseData sqlite() {
         return ResultGenerator.genSuccessResult(messageManager.findAll());
     }
 
+    /**
+     * 获取最后一个block的信息
+     */
     @GetMapping("db")
     public BaseData getRockDB() {
         return ResultGenerator.genSuccessResult(dbBlockManager.getLastBlock());
     }
 
+    /**
+     * 手工执行区块内sql落地到sqlite操作
+     * @param pageable
+     * 分页
+     * @return
+     * 已同步到哪块了的信息
+     */
     @GetMapping("sync")
-    public BaseData async(@PageableDefault Pageable pageable) {
+    public BaseData sync(@PageableDefault Pageable pageable) {
         ApplicationContextProvider.publishEvent(new DbSyncEvent(""));
         return ResultGenerator.genSuccessResult(syncManager.findAll(pageable));
     }

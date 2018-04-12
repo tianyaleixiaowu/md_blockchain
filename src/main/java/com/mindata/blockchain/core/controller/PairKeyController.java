@@ -19,6 +19,9 @@ public class PairKeyController {
     @Resource
     private PairKeyService pairKeyService;
 
+    /**
+     * 生成公钥私钥
+     */
     @GetMapping("/random")
     public BaseData generate() throws TrustSDKException {
          return ResultGenerator.genSuccessResult(pairKeyService.generate());

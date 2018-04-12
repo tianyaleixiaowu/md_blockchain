@@ -98,7 +98,6 @@ public class ClientStarter {
      */
     @Scheduled(fixedRate = 1000 * 60 * 60 * 24, initialDelay = 2000)
     public void fetchPermission() {
-        String localIp = CommonUtil.getLocalIp();
         try {
             //如果连不上服务器，就不让启动
             PermissionData permissionData = restTemplate.getForEntity(managerUrl + "permission?name=" + name,
