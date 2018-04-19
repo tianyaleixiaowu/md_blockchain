@@ -11,7 +11,8 @@ Java区块链平台，基于Springboot开发的区块链平台。区块链qq交�
 希望高手不吝赐教，集思广益，提出见解或方案，来做一个区块链平台项目，适合更多的区块链场景，而不仅仅是账本和各种忽悠人的代币。
 
 理想中的区块链平台：
-![输入图片说明](https://img-blog.csdn.net/2018021113252218 "在这里输入图片标题")
+
+![输入图片说明](https://gitee.com/uploads/images/2018/0419/170921_7808ffdc_303698.png "1.png")
 
 ### 项目说明
 主要有存储模块、网络模块、加密模块、区块解析入库等。
@@ -57,7 +58,7 @@ Block内存储的是类Sql语句。联盟间预先设定好符合业务场景需
 
 使用方法：先启动[md_blockchain_manager项目](https://gitee.com/tianyalei/md_blockchain_manager)，然后修改application.yml里的name、appid和managerUrl和manager项目数据库里的一一对应，作为一个节点启动即可。
 
-可以通过访问localhost:8080/block?content=1来生成一个区块，至少要启动2个节点才行，生成Block时需要除自己外的至少过半同意才行。生成Block后就会发现别的节点也会自动同步自己新生成的Block。目前代码里默认设置了一张表message，里面也只有一个字段content，相当于一个简单的区块链记事本了。
+可以通过访问localhost:8080/block?content=1来生成一个区块。正常使用时至少要启动2个节点才行，生成Block时需要除自己外的至少过半同意才行。为了方便测试，在manager项目里可以通过修改MemberManager类中的方法，将返回除自己外的所有节点修改为返回所有节点，这样就能自己一个节点玩起来了。如果有多个节点，在生成Block后就会发现别的节点也会自动同步自己新生成的Block。目前代码里默认设置了一张表message，里面也只有一个字段content，相当于一个简单的区块链记事本。
 
 可以通过localhost:8080/sqlite来查看sqlite里存的数据，就是根据Block里的sql语句执行后的结果。
 
