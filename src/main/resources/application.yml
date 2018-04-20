@@ -6,8 +6,8 @@ spring:
 sqlite:
   dbName: a.db  #本地sqlite的名字
 db:
-  levelDB: true    #在部分Windows机器上rocksDB会报错dll找不到，那么就用levelDB来替代
-  rocksDB: false
+  levelDB: false    #在部分Windows机器上rocksDB会报错dll找不到，那么就用levelDB来替代
+  rocksDB: true
 version: 1
 name: ${NAME:maida}
 appId: ${APP_ID:wolf}
