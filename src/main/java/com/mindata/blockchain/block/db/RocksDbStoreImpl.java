@@ -3,6 +3,7 @@ package com.mindata.blockchain.block.db;
 import com.mindata.blockchain.socket.common.Const;
 import org.rocksdb.RocksDB;
 import org.rocksdb.RocksDBException;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import java.io.UnsupportedEncodingException;
  * @author wuweifeng wrote on 2018/3/13.
  */
 @Component
+@ConditionalOnProperty("db.rocksDB")
 public class RocksDbStoreImpl implements DbStore {
     @Resource
     private RocksDB rocksDB;
