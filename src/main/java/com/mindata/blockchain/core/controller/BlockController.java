@@ -95,6 +95,14 @@ public class BlockController {
     }
 
     /**
+     * 查询已落地的sqlite里content字段
+     */
+    @GetMapping("sqlite/content")
+    public BaseData content() {
+        return ResultGenerator.genSuccessResult(messageManager.findAllContent());
+    }
+
+    /**
      * 获取最后一个block的信息
      */
     @GetMapping("db")
