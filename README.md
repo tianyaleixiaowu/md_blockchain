@@ -24,7 +24,7 @@ Block内存储的是类Sql语句。联盟间预先设定好符合业务场景需
 
 场景就比较广泛了，可以设定不同的表结构，或者多个表，进而能完成各自类型信息的存储。譬如商品溯源，从生产商、运输、经销商、消费者等，每个环节都可以对某个商品进行ADD信息的操作。
 
-存储采用的是key-value数据库rocksDB，了解比特币的知道，比特币用的是levelDB，都是类似的东西。最近发现在部分Windows下，rocksDB加载失败。也可以替换为levelDB，只需要修改2个类即可。
+存储采用的是key-value数据库rocksDB，了解比特币的知道，比特币用的是levelDB，都是类似的东西。最近发现在部分Windows下，rocksDB加载失败。也可以替换为levelDB，只需要修改yml中db.levelDB为true，db.RocksDB为false即可。
 
 结构类似于sql的语句，如ADD（增删改） tableName（表名）ID（主键） JSON（该记录的json）。
 
