@@ -35,9 +35,9 @@ public class CommitMsgQueue extends BaseMsgQueue {
         String hash = voteMsg.getHash();
         List<VoteMsg> voteMsgs = voteMsgConcurrentHashMap.get(hash);
         if (CollectionUtil.isEmpty(voteMsgs)) {
-            List<VoteMsg> msgs = new ArrayList<>();
-            msgs.add(voteMsg);
-            voteMsgConcurrentHashMap.put(hash, msgs);
+            voteMsgs = new ArrayList<>();
+            voteMsgs.add(voteMsg);
+            voteMsgConcurrentHashMap.put(hash, voteMsgs);
         }
         //判断本地集合是否已经存在完全相同的voteMsg了
         for (VoteMsg temp : voteMsgs) {
