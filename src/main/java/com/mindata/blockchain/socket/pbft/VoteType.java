@@ -22,11 +22,7 @@ public class VoteType {
      */
     public static final byte PREPARE = 2;
     /**
-     * 节点收到超过2f+1不同节点的prepare消息后，节点进入prepared状态，之后会广播一个commit<h, d, s>消息
-     */
-    public static final byte PREPARED = 3;
-    /**
      * 每个节点收到超过2f+1个不同节点的commit消息后，就认为该区块已经达成一致，进入committed状态，并将其持久化到区块链数据库中
      */
-    public static final byte COMMIT = 4;
+    public static final byte COMMIT = 3;
 }

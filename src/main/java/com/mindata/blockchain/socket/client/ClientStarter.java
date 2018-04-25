@@ -156,6 +156,7 @@ public class ClientStarter {
      */
     public int pbftSize() {
         SetWithLock setWithLock = clientGroupContext.groups.clients(clientGroupContext, Const.GROUP_NAME);
+        logger.info("pbft size " + (((Set) setWithLock.getObj()).size() - 1) / 3);
         return (((Set) setWithLock.getObj()).size() - 1) / 3;
     }
 }

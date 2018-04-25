@@ -35,7 +35,7 @@ public class CommitEventListener {
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.PBFT_VOTE).setBody(new
                 VoteBody(voteMsg)).build();
 
-        //广播给所有人我已Prepare
+        //广播给所有人我已commit
         packetSender.sendGroup(blockPacket);
     }
 }

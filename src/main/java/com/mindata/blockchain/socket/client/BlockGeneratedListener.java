@@ -2,7 +2,7 @@ package com.mindata.blockchain.socket.client;
 
 import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.core.event.AddBlockEvent;
-import com.mindata.blockchain.socket.body.RpcBlockBody;
+import com.mindata.blockchain.socket.body.RpcSimpleBlockBody;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.PacketBuilder;
 import com.mindata.blockchain.socket.packet.PacketType;
@@ -24,8 +24,9 @@ public class BlockGeneratedListener {
     @Order(2)
     @EventListener(AddBlockEvent.class)
     public void blockGenerated(AddBlockEvent addBlockEvent) {
+        Block block = (Block) addBlockEvent.getSource();
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.GENERATE_COMPLETE_REQUEST).setBody(new
-                RpcBlockBody((Block) addBlockEvent.getSource())).build();
+                RpcSimpleBlockBody(block.getHash())).build();
 
         //广播给其他人做验证
         packetSender.sendGroup(blockPacket);

@@ -36,7 +36,7 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<RpcBlockBo
         CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);
         //对区块的基本信息进行校验，校验通过后进入pbft的Pre队列
         RpcCheckBlockBody rpcCheckBlockBody = checkerManager.check(block);
-        logger.info("校验结果:" + rpcBlockBody.toString());
+        logger.info("校验结果:" + rpcCheckBlockBody.toString());
         if (rpcCheckBlockBody.getCode() == 0) {
             VotePreMsg votePreMsg = new VotePreMsg();
             votePreMsg.setBlock(block);
