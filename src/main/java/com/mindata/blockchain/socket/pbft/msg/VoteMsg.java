@@ -26,6 +26,17 @@ public class VoteMsg {
      */
     private boolean agree;
 
+    @Override
+    public String toString() {
+        return "VoteMsg{" +
+                "voteType=" + voteType +
+                ", hash='" + hash + '\'' +
+                ", number=" + number +
+                ", appId='" + appId + '\'' +
+                ", agree=" + agree +
+                '}';
+    }
+
     public byte getVoteType() {
         return voteType;
     }

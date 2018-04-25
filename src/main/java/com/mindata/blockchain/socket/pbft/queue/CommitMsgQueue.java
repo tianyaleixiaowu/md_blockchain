@@ -49,7 +49,7 @@ public class CommitMsgQueue extends BaseMsgQueue {
         voteMsgs.add(voteMsg);
 
         //如果已经落地过了
-        if (voteStateConcurrentHashMap.get(hash)) {
+        if (voteStateConcurrentHashMap.get(hash) != null && voteStateConcurrentHashMap.get(hash)) {
             return;
         }
 
