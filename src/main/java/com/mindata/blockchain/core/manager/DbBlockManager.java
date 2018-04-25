@@ -3,6 +3,7 @@ package com.mindata.blockchain.core.manager;
 import cn.hutool.core.util.StrUtil;
 import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
+import com.mindata.blockchain.block.check.CheckerManager;
 import com.mindata.blockchain.block.db.DbStore;
 import com.mindata.blockchain.common.Constants;
 import com.mindata.blockchain.common.FastJsonUtil;
@@ -25,6 +26,8 @@ import javax.annotation.Resource;
 public class DbBlockManager {
     @Resource
     private DbStore dbStore;
+    @Resource
+    private CheckerManager checkerManager;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
@@ -67,6 +70,18 @@ public class DbBlockManager {
     }
 
     /**
+     * 获取最后一个block的number
+     * @return number
+     */
+    public int getLastBlockNumber() {
+        Block block = getLastBlock();
+        if (block != null) {
+            return block.getBlockHeader().getNumber();
+        }
+        return 0;
+    }
+
+    /**
      * 获取某一个block的下一个Block
      *
      * @param block
@@ -90,23 +105,6 @@ public class DbBlockManager {
     }
 
     /**
-     * 校验该block能否做为本地的next区块
-     * @param block block
-     * @return true false
-     */
-    public boolean checkCanBeNextBlock(Block block) {
-        Block localLast = getLastBlock();
-        //创世块可以，或者新块的prev等于本地的last hash也可以
-        if (localLast == null && block.getBlockHeader().getHashPreviousBlock() == null) {
-            return true;
-        }
-        if (localLast != null && StrUtil.equals(localLast.getHash(), block.getBlockHeader().getHashPreviousBlock())) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * 数据库里添加一个新的区块
      *
      * @param addBlockEvent
@@ -122,8 +120,8 @@ public class DbBlockManager {
         if (dbStore.get(hash) != null) {
             return;
         }
-        //校验本地最后一个区块，是否等于该block prevHash
-        if (!checkCanBeNextBlock(block)) {
+        //校验区块
+        if (checkerManager.check(block).getCode() != 0) {
             return;
         }
 

@@ -149,4 +149,13 @@ public class ClientStarter {
         SetWithLock setWithLock = clientGroupContext.groups.clients(clientGroupContext, Const.GROUP_NAME);
         return ((Set) setWithLock.getObj()).size() / 2;
     }
+
+    /**
+     * pbft算法中拜占庭节点数量f，总节点数3f+1
+     * @return f
+     */
+    public int pbftSize() {
+        SetWithLock setWithLock = clientGroupContext.groups.clients(clientGroupContext, Const.GROUP_NAME);
+        return (((Set) setWithLock.getObj()).size() - 1) / 3;
+    }
 }

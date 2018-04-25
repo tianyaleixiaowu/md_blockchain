@@ -1,8 +1,6 @@
 package com.mindata.blockchain.block.check;
 
-import cn.hutool.core.util.StrUtil;
 import com.mindata.blockchain.block.Block;
-import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.socket.body.RpcCheckBlockBody;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +14,6 @@ import javax.annotation.Resource;
 public class CheckerManager {
     @Resource
     private BlockChecker blockChecker;
-    @Resource
-    private DbBlockManager dbBlockManager;
 
     /**
      * 基本校验
@@ -33,32 +29,16 @@ public class CheckerManager {
         if (time != 0) {
             return new RpcCheckBlockBody(-4, "block的时间错误");
         }
+        int hash = blockChecker.checkHash(block);
+        if (hash != 0) {
+            return new RpcCheckBlockBody(-3, "hash校验不通过");
+        }
         int permission = blockChecker.checkPermission(block);
         if (permission != 0) {
             return new RpcCheckBlockBody(-2, "没有表的操作权限");
         }
 
         return new RpcCheckBlockBody(0, "OK", block);
-    }
-
-    /**
-     * 校验block可否做为本地的最新block的next block
-     * @param block
-     * block
-     * @return
-     * 是否OK
-     */
-    public RpcCheckBlockBody checkIsNextBlock(Block block) {
-        //基础格式、权限校验
-        RpcCheckBlockBody rpcCheckBlockBody = check(block);
-        if (dbBlockManager.getLastBlock() == null) {
-            return rpcCheckBlockBody;
-        }
-        //校验能否作为本地最新区块的next block
-        if (!StrUtil.equals(block.getBlockHeader().getHashPreviousBlock(), dbBlockManager.getLastBlock().getHash())) {
-            return new RpcCheckBlockBody(-10, "不能作为本地最新block的next block");
-        }
-        return rpcCheckBlockBody;
     }
 
 }

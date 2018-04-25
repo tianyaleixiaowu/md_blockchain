@@ -40,7 +40,7 @@ public class NextBlockResponseHandler extends AbstractBlockHandler<RpcBlockBody>
         } else {
             //此处校验传过来的block的合法性，如果合法，则更新到本地，作为next区块
             CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);
-            RpcCheckBlockBody rpcCheckBlockBody = checkerManager.checkIsNextBlock(block);
+            RpcCheckBlockBody rpcCheckBlockBody = checkerManager.check(block);
             //校验通过，则存入本地DB，保存新区块
             if (rpcCheckBlockBody.getCode() == 0) {
                 ApplicationContextProvider.publishEvent(new AddBlockEvent(block));

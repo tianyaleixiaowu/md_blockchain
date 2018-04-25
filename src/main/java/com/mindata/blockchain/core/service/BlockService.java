@@ -96,6 +96,7 @@ public class BlockService {
         blockHeader.setPublicKey(blockRequestBody.getPublicKey());
         blockHeader.setTimeStamp(CommonUtil.getNow());
         blockHeader.setVersion(version);
+        blockHeader.setNumber(dbBlockManager.getLastBlockNumber() + 1);
         blockHeader.setHashPreviousBlock(dbBlockManager.getLastBlockHash());
         Block block = new Block();
         block.setBlockBody(blockBody);

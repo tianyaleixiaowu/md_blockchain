@@ -2,8 +2,8 @@ package com.mindata.blockchain.socket.handler.client;
 
 import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.block.Block;
+import com.mindata.blockchain.block.check.CheckerManager;
 import com.mindata.blockchain.core.event.AddBlockEvent;
-import com.mindata.blockchain.core.manager.DbBlockManager;
 import com.mindata.blockchain.core.requestbody.BlockRequestBody;
 import com.mindata.blockchain.core.service.BlockService;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
@@ -44,10 +44,10 @@ public class GenerateBlockResponseHandler extends AbstractBlockHandler<RpcCheckB
         HalfAgreeChecker.halfCheck(respId, baseResponse, new HalfAgreeCallback() {
             @Override
             public void agree() {
-                logger.info("大家已同意生成block");
-                DbBlockManager dbBlockManager = ApplicationContextProvider.getBean(DbBlockManager.class);
+                logger.info("大家已过半同意生成block");
+                CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);
                 //判断是否确实可以生成，避免在大家投票期间，已经拉取了新的区块
-                if(dbBlockManager.checkCanBeNextBlock(block)) {
+                if(checkerManager.check(block).getCode() == 0) {
                     //发布新生成了区块事件
                     ApplicationContextProvider.publishEvent(new AddBlockEvent(baseResponse.getObject()));
                 } else {

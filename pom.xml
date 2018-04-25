@@ -91,7 +91,14 @@
 			<version>0.10</version>
 		</dependency>
 		<!--leveldb end-->
-		<dependency>
+        <!--disruptor begin-->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <!--disruptor end-->
+        <dependency>
             <groupId>com.madgag.spongycastle</groupId>
             <artifactId>core</artifactId>
             <version>1.54.0.0</version>

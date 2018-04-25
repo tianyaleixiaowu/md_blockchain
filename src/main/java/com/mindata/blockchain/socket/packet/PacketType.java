@@ -49,4 +49,8 @@ public interface PacketType {
      * 获取下一个区块的信息
      */
     byte NEXT_BLOCK_INFO_RESPONSE = -5;
+    /**
+     * pbft投票
+     */
+    byte PBFT_VOTE = 10;
 }
