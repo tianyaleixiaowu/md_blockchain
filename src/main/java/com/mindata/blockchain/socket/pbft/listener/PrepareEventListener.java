@@ -1,5 +1,6 @@
 package com.mindata.blockchain.socket.pbft.listener;
 
+import com.mindata.blockchain.common.AppId;
 import com.mindata.blockchain.socket.body.VoteBody;
 import com.mindata.blockchain.socket.client.PacketSender;
 import com.mindata.blockchain.socket.packet.BlockPacket;
@@ -31,6 +32,7 @@ public class PrepareEventListener {
     public void msgIsPrepare(MsgPrepareEvent msgPrepareEvent) {
         VoteMsg voteMsg = (VoteMsg) msgPrepareEvent.getSource();
         voteMsg.setVoteType(VoteType.PREPARE);
+        voteMsg.setAppId(AppId.value);
 
         //群发消息，通知别的节点，我已对该Block Prepare
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.PBFT_VOTE).setBody(new

@@ -2,6 +2,7 @@ package com.mindata.blockchain.socket.pbft.queue;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import com.mindata.blockchain.common.AppId;
 import com.mindata.blockchain.socket.pbft.VoteType;
 import com.mindata.blockchain.socket.pbft.event.MsgCommitEvent;
 import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
@@ -65,6 +66,7 @@ public class PrepareMsgQueue extends BaseMsgQueue {
         VoteMsg commitMsg = new VoteMsg();
         BeanUtil.copyProperties(voteMsg, commitMsg);
         commitMsg.setVoteType(VoteType.COMMIT);
+        commitMsg.setAppId(AppId.value);
         //开始校验并决定是否进入commit阶段
         //校验该vote是否合法
         if (commitMsgQueue.hasOtherConfirm(hash, voteMsg.getNumber())) {
