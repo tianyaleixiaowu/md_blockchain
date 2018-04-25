@@ -82,7 +82,7 @@ public class CommitMsgQueue extends BaseMsgQueue {
                 continue;
             }
             //如果有别的>=number的Block已经达成共识了，则返回true
-            if (voteStateConcurrentHashMap.get(key)) {
+            if (voteStateConcurrentHashMap.get(hash) != null && voteStateConcurrentHashMap.get(hash)) {
                 return true;
             }
         }
