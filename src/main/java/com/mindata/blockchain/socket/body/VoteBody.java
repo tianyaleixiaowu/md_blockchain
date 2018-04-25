@@ -9,7 +9,12 @@ import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
 public class VoteBody extends BaseBody {
     private VoteMsg voteMsg;
 
+    public VoteBody() {
+        super();
+    }
+
     public VoteBody(VoteMsg voteMsg) {
+        super();
         this.voteMsg = voteMsg;
     }
 

@@ -5,8 +5,6 @@ import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.block.db.DbStore;
 import com.mindata.blockchain.common.Constants;
 import com.mindata.blockchain.common.FastJsonUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -18,8 +16,6 @@ import javax.annotation.Resource;
 public class DbBlockManager {
     @Resource
     private DbStore dbStore;
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 查找第一个区块
