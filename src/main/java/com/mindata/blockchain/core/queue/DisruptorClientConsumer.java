@@ -31,7 +31,6 @@ public class DisruptorClientConsumer implements MessageConsumer {
     static {
         handlerMap.put(PacketType.GENERATE_BLOCK_RESPONSE, new GenerateBlockResponseHandler());
         handlerMap.put(PacketType.TOTAL_BLOCK_INFO_RESPONSE, new TotalBlockInfoResponseHandler());
-        handlerMap.put(PacketType.LAST_BLOCK_INFO_RESPONSE, new LastBlockInfoResponseHandler());
         handlerMap.put(PacketType.NEXT_BLOCK_INFO_RESPONSE, new NextBlockResponseHandler());
         handlerMap.put(PacketType.GENERATE_COMPLETE_RESPONSE, new GenerateCompleteResponseHandler());
     }

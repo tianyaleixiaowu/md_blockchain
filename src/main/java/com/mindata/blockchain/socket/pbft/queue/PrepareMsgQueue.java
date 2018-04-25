@@ -41,7 +41,7 @@ public class PrepareMsgQueue extends BaseMsgQueue {
      *         voteMsg
      */
     @Override
-    public void push(VoteMsg voteMsg) {
+    protected void push(VoteMsg voteMsg) {
         String hash = voteMsg.getHash();
         List<VoteMsg> voteMsgs = voteMsgConcurrentHashMap.get(hash);
         if (CollectionUtil.isEmpty(voteMsgs)) {

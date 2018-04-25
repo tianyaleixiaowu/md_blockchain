@@ -8,7 +8,6 @@ import com.mindata.blockchain.socket.packet.PacketType;
 import com.mindata.blockchain.socket.pbft.VoteType;
 import com.mindata.blockchain.socket.pbft.event.MsgPrepareEvent;
 import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
-import com.mindata.blockchain.socket.pbft.queue.PrepareMsgQueue;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -19,8 +18,6 @@ import javax.annotation.Resource;
  */
 @Component
 public class PrepareEventListener {
-    @Resource
-    private PrepareMsgQueue prepareMsgQueue;
     @Resource
     private PacketSender packetSender;
 
@@ -34,7 +31,6 @@ public class PrepareEventListener {
     public void msgIsPrepare(MsgPrepareEvent msgPrepareEvent) {
         VoteMsg voteMsg = (VoteMsg) msgPrepareEvent.getSource();
         voteMsg.setVoteType(VoteType.PREPARE);
-        prepareMsgQueue.push(voteMsg);
 
         //群发消息，通知别的节点，我已对该Block Prepare
         BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.PBFT_VOTE).setBody(new
