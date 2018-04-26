@@ -2,14 +2,13 @@ package com.mindata.blockchain.socket.handler.client;
 
 import com.mindata.blockchain.ApplicationContextProvider;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
-import com.mindata.blockchain.socket.body.RpcNextBlockBody;
 import com.mindata.blockchain.socket.body.BlockHash;
+import com.mindata.blockchain.socket.body.RpcNextBlockBody;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.pbft.queue.NextBlockQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
-import org.tio.utils.json.Json;
 
 /**
  * 对方根据我们传的hash，给我们返回的next block
@@ -26,7 +25,7 @@ public class NextBlockResponseHandler extends AbstractBlockHandler<RpcNextBlockB
 
     @Override
     public synchronized Object handler(BlockPacket packet, RpcNextBlockBody rpcBlockBody, ChannelContext channelContext) {
-        logger.info("收到来自于<" + rpcBlockBody.getAppId() + ">的回复，下一个Block hash为：" + Json.toJson(rpcBlockBody));
+        logger.info("收到来自于<" + rpcBlockBody.getAppId() + ">的回复，下一个Block hash为：" + rpcBlockBody.getHash());
 
         String hash = rpcBlockBody.getHash();
         //如果为null，说明对方根据我们传过去的hash，找不到next block。说明要么已经是最新了，要么对方的block比自己的少

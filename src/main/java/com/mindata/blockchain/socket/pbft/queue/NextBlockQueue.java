@@ -56,6 +56,7 @@ public class NextBlockQueue {
             }
         }
         baseResponses.add(blockHash);
+        put(key, baseResponses);
     }
 
     /**
