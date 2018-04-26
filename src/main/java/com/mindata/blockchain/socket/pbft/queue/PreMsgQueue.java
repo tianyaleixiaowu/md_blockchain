@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * preprepare消息的存储，但凡收到请求生成Block的信息，都在这里处理
+ *
  * @author wuweifeng wrote on 2018/4/23.
  */
 @Component
@@ -38,7 +39,7 @@ public class PreMsgQueue extends BaseMsgQueue {
         }
         //但凡是能进到该push方法的，都是通过基本校验的，但在并发情况下可能会相同number的block都进到投票队列中
         //需要对新进来的Vote信息的number进行校验，如果在比prepre阶段靠后的阶段中，已经出现了认证OK的同number的vote，则拒绝进入该队列
-        if (prepareMsgQueue.hasOtherConfirm(hash, voteMsg.getNumber())) {
+        if (prepareMsgQueue.otherConfirm(hash, voteMsg.getNumber())) {
             logger.info("拒绝进入Prepare阶段，hash为" + hash);
             return;
         }
@@ -50,6 +51,13 @@ public class PreMsgQueue extends BaseMsgQueue {
         eventPublisher.publishEvent(new MsgPrepareEvent(voteMsg));
     }
 
+    /**
+     * 根据hash，得到内存中的Block信息
+     *
+     * @param hash
+     *         hash
+     * @return Block
+     */
     public Block findByHash(String hash) {
         VotePreMsg votePreMsg = blockConcurrentHashMap.get(hash);
         if (votePreMsg != null) {

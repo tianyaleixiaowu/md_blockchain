@@ -1,7 +1,6 @@
 package com.mindata.blockchain.socket.pbft.queue;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import com.mindata.blockchain.common.AppId;
 import com.mindata.blockchain.socket.pbft.VoteType;
 import com.mindata.blockchain.socket.pbft.event.MsgCommitEvent;
@@ -12,9 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Prepare阶段的消息队列
@@ -22,21 +19,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author wuweifeng wrote on 2018/4/25.
  */
 @Component
-public class PrepareMsgQueue extends BaseMsgQueue {
+public class PrepareMsgQueue extends AbstractVoteMsgQueue {
     @Resource
     private CommitMsgQueue commitMsgQueue;
     @Resource
     private ApplicationEventPublisher eventPublisher;
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    /**
-     * 存储所有的hash的投票集合
-     */
-    private ConcurrentHashMap<String, List<VoteMsg>> voteMsgConcurrentHashMap = new ConcurrentHashMap<>();
-    /**
-     * 存储本节点已确认状态的hash的集合，即本节点已对外广播过允许commit或拒绝commit的消息了
-     */
-    private ConcurrentHashMap<String, Boolean> voteStateConcurrentHashMap = new ConcurrentHashMap<>();
+
 
     /**
      * 收到节点（包括自己）针对某Block的Prepare消息
@@ -45,22 +35,8 @@ public class PrepareMsgQueue extends BaseMsgQueue {
      *         voteMsg
      */
     @Override
-    protected void push(VoteMsg voteMsg) {
+    protected void deal(VoteMsg voteMsg, List<VoteMsg> voteMsgs) {
         String hash = voteMsg.getHash();
-        List<VoteMsg> voteMsgs = voteMsgConcurrentHashMap.get(hash);
-        if (CollectionUtil.isEmpty(voteMsgs)) {
-            voteMsgs = new ArrayList<>();
-            voteMsgs.add(voteMsg);
-            voteMsgConcurrentHashMap.put(hash, voteMsgs);
-        }
-        //判断本地集合是否已经存在完全相同的voteMsg了
-        for (VoteMsg temp : voteMsgs) {
-            if (temp.getNumber() == voteMsg.getNumber() && temp.getAppId().equals(voteMsg.getAppId())) {
-                return;
-            }
-        }
-        //添加进去
-        voteMsgs.add(voteMsg);
         //如果我已经对该hash的commit投过票了，就不再继续
         if (voteStateConcurrentHashMap.get(hash) != null) {
             return;
@@ -106,23 +82,10 @@ public class PrepareMsgQueue extends BaseMsgQueue {
      *         hash
      * @return 是否存在
      */
-    public boolean hasOtherConfirm(String hash, int number) {
+    public boolean otherConfirm(String hash, int number) {
         if (commitMsgQueue.hasOtherConfirm(hash, number)) {
             return true;
         }
-        for (String key : voteMsgConcurrentHashMap.keySet()) {
-            if (hash.equals(key)) {
-                continue;
-            }
-            if (voteMsgConcurrentHashMap.get(key).get(0).getNumber() < number) {
-                continue;
-            }
-            //如果我已经同意过其他hash的commit了
-            if(voteStateConcurrentHashMap.get(key) != null && voteStateConcurrentHashMap.get(key)) {
-                return true;
-            }
-        }
-
-        return false;
+        return hasOtherConfirm(hash, number);
     }
 }
