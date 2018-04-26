@@ -155,8 +155,12 @@ public class ClientStarter {
      * @return f
      */
     public int pbftSize() {
-        SetWithLock setWithLock = clientGroupContext.groups.clients(clientGroupContext, Const.GROUP_NAME);
-        logger.info("pbft size " + (((Set) setWithLock.getObj()).size() - 1) / 3);
-        return (((Set) setWithLock.getObj()).size() - 1) / 3;
+        //Group内共有多少个节点
+        int total = nodes.size();
+        int pbft = (total - 1) / 3;
+        if (pbft <= 0) {
+            pbft = 1;
+        }
+        return pbft;
     }
 }
