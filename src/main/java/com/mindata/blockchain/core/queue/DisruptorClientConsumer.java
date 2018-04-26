@@ -44,7 +44,7 @@ public class DisruptorClientConsumer implements MessageConsumer {
 
         //消费消息
         BaseBody baseBody = Json.toBean(new String(blockPacket.getBody()), BaseBody.class);
-        logger.info("收到来自于<" + baseBody.getAppId() + ">针对msg<" + baseBody.getResponseMsgId() + ">的回应");
+        //logger.info("收到来自于<" + baseBody.getAppId() + ">针对msg<" + baseBody.getResponseMsgId() + ">的回应");
 
         String appId = baseBody.getAppId();
         if (StrUtil.equals(AppId.value, appId)) {
