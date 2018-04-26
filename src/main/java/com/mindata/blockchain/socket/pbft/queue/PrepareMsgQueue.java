@@ -6,6 +6,8 @@ import com.mindata.blockchain.common.AppId;
 import com.mindata.blockchain.socket.pbft.VoteType;
 import com.mindata.blockchain.socket.pbft.event.MsgCommitEvent;
 import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +27,7 @@ public class PrepareMsgQueue extends BaseMsgQueue {
     private CommitMsgQueue commitMsgQueue;
     @Resource
     private ApplicationEventPublisher eventPublisher;
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * 存储所有的hash的投票集合
@@ -77,7 +80,7 @@ public class PrepareMsgQueue extends BaseMsgQueue {
             long unAgreeCount = voteMsgs.size() - agreeCount;
 
             //开始发出commit的同意or拒绝的消息
-            if (agreeCount >= pbftSize() + 1) {
+            if (agreeCount >= pbftSize() * 2 + 1) {
                 agree(commitMsg, true);
             } else if (unAgreeCount >= pbftSize() + 1) {
                 agree(commitMsg, false);
@@ -87,6 +90,7 @@ public class PrepareMsgQueue extends BaseMsgQueue {
     }
 
     private void agree(VoteMsg commitMsg, boolean flag) {
+        logger.info("Prepare阶段完毕，是否进入commit的标志是：" + flag);
         //发出拒绝commit的消息
         commitMsg.setAgree(flag);
         eventPublisher.publishEvent(new MsgCommitEvent(commitMsg));
