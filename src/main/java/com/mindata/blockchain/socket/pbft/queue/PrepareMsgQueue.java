@@ -118,7 +118,7 @@ public class PrepareMsgQueue extends BaseMsgQueue {
                 continue;
             }
             //如果我已经同意过其他hash的commit了
-            if(true == voteStateConcurrentHashMap.get(key)) {
+            if(voteStateConcurrentHashMap.get(key) != null && voteStateConcurrentHashMap.get(key)) {
                 return true;
             }
         }
