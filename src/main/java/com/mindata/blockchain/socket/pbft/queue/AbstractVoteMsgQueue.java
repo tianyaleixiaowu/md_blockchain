@@ -2,9 +2,12 @@ package com.mindata.blockchain.socket.pbft.queue;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -19,6 +22,8 @@ public abstract class AbstractVoteMsgQueue extends BaseMsgQueue {
      * 存储本节点已确认状态的hash的集合，即本节点已对外广播过允许commit或拒绝commit的消息了
      */
     protected ConcurrentHashMap<String, Boolean> voteStateConcurrentHashMap = new ConcurrentHashMap<>();
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
     abstract void deal(VoteMsg voteMsg, List<VoteMsg> voteMsgs);
 
@@ -68,5 +73,26 @@ public abstract class AbstractVoteMsgQueue extends BaseMsgQueue {
             }
         }
         return false;
+    }
+
+    /**
+     * 清理旧的block的hash
+     */
+    protected void clearOldBlockHash(int number) {
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            for (String key : voteMsgConcurrentHashMap.keySet()) {
+                if (voteMsgConcurrentHashMap.get(key).get(0).getNumber() <= number) {
+                    voteMsgConcurrentHashMap.remove(key);
+                    voteStateConcurrentHashMap.remove(key);
+                    logger.info("清理过时的Vote，hash为：" + key);
+                }
+            }
+            return null;
+        });
     }
 }

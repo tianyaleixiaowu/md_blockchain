@@ -6,6 +6,8 @@ import com.mindata.blockchain.core.event.AddBlockEvent;
 import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -45,6 +47,17 @@ public class CommitMsgQueue extends AbstractVoteMsgQueue {
             voteStateConcurrentHashMap.put(hash, true);
             ApplicationContextProvider.publishEvent(new AddBlockEvent(block));
         }
+    }
+
+    /**
+     * 新区块生成后，clear掉map中number比区块小的所有数据
+     * @param addBlockEvent
+     */
+    @Order(3)
+    @EventListener(AddBlockEvent.class)
+    public void blockGenerated(AddBlockEvent addBlockEvent) {
+        Block block = (Block) addBlockEvent.getSource();
+        clearOldBlockHash(block.getBlockHeader().getNumber());
     }
 
 }

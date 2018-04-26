@@ -1,13 +1,17 @@
 package com.mindata.blockchain.socket.pbft.queue;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.common.AppId;
+import com.mindata.blockchain.core.event.AddBlockEvent;
 import com.mindata.blockchain.socket.pbft.VoteType;
 import com.mindata.blockchain.socket.pbft.event.MsgCommitEvent;
 import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,8 +29,6 @@ public class PrepareMsgQueue extends AbstractVoteMsgQueue {
     @Resource
     private ApplicationEventPublisher eventPublisher;
     private Logger logger = LoggerFactory.getLogger(getClass());
-
-
 
     /**
      * 收到节点（包括自己）针对某Block的Prepare消息
@@ -87,5 +89,17 @@ public class PrepareMsgQueue extends AbstractVoteMsgQueue {
             return true;
         }
         return hasOtherConfirm(hash, number);
+    }
+
+    /**
+     * 新区块生成后，clear掉map中number比区块小的所有数据
+     *
+     * @param addBlockEvent  addBlockEvent
+     */
+    @Order(3)
+    @EventListener(AddBlockEvent.class)
+    public void blockGenerated(AddBlockEvent addBlockEvent) {
+        Block block = (Block) addBlockEvent.getSource();
+        clearOldBlockHash(block.getBlockHeader().getNumber());
     }
 }

@@ -1,15 +1,19 @@
 package com.mindata.blockchain.socket.pbft.queue;
 
 import com.mindata.blockchain.block.Block;
+import com.mindata.blockchain.core.event.AddBlockEvent;
 import com.mindata.blockchain.socket.pbft.event.MsgPrepareEvent;
 import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
 import com.mindata.blockchain.socket.pbft.msg.VotePreMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -45,7 +49,6 @@ public class PreMsgQueue extends BaseMsgQueue {
         }
         //存入Pre集合中
         blockConcurrentHashMap.put(hash, votePreMsg);
-        //TODO 启动定时器，清理该hash
 
         //加入Prepare行列，推送给所有人
         eventPublisher.publishEvent(new MsgPrepareEvent(voteMsg));
@@ -64,5 +67,29 @@ public class PreMsgQueue extends BaseMsgQueue {
             return votePreMsg.getBlock();
         }
         return null;
+    }
+
+    /**
+     * 新区块生成后，clear掉map中number比区块小的所有数据
+     */
+    @Order(3)
+    @EventListener(AddBlockEvent.class)
+    public void blockGenerated(AddBlockEvent addBlockEvent) {
+        Block block = (Block) addBlockEvent.getSource();
+        int number = block.getBlockHeader().getNumber();
+        CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            for (String key : blockConcurrentHashMap.keySet()) {
+                if (blockConcurrentHashMap.get(key).getNumber() <= number) {
+                    blockConcurrentHashMap.remove(key);
+                    logger.info("清理过时的Vote，hash为：" + key);
+                }
+            }
+            return null;
+        });
     }
 }
