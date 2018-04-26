@@ -75,7 +75,7 @@ public class PrepareMsgQueue extends BaseMsgQueue {
         if (commitMsgQueue.hasOtherConfirm(hash, voteMsg.getNumber())) {
              agree(commitMsg, false);
         } else {
-            //开始校验拜占庭数量，如果agree的超过f + 1，就commit
+            //开始校验拜占庭数量，如果agree的超过2f + 1，就commit
             long agreeCount = voteMsgs.stream().filter(VoteMsg::isAgree).count();
             long unAgreeCount = voteMsgs.size() - agreeCount;
 
@@ -117,11 +117,8 @@ public class PrepareMsgQueue extends BaseMsgQueue {
             if (voteMsgConcurrentHashMap.get(key).get(0).getNumber() < number) {
                 continue;
             }
-            //同number不同hash的投票集合，也就是潜在的并发、分叉的可能
-            List<VoteMsg> voteMsgs = voteMsgConcurrentHashMap.get(key);
-            long count = voteMsgs.stream().filter(VoteMsg::isAgree).count();
-            //如果有别的>=number的Block已经达成共识了，则返回true
-            if (count >= pbftSize() + 1) {
+            //如果我已经同意过其他hash的commit了
+            if(true == voteStateConcurrentHashMap.get(key)) {
                 return true;
             }
         }

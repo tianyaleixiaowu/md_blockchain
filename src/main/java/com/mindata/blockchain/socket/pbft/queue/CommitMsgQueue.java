@@ -52,7 +52,7 @@ public class CommitMsgQueue extends BaseMsgQueue {
         voteMsgs.add(voteMsg);
 
         //如果已经落地过了
-        if (voteStateConcurrentHashMap.get(hash) != null && voteStateConcurrentHashMap.get(hash)) {
+        if (true == voteStateConcurrentHashMap.get(hash)) {
             return;
         }
 
@@ -86,7 +86,7 @@ public class CommitMsgQueue extends BaseMsgQueue {
                 continue;
             }
             //如果有别的>=number的Block已经达成共识了，则返回true
-            if (voteStateConcurrentHashMap.get(hash) != null && voteStateConcurrentHashMap.get(hash)) {
+            if (true == voteStateConcurrentHashMap.get(hash)) {
                 return true;
             }
         }

@@ -4,6 +4,8 @@ import com.mindata.blockchain.block.Block;
 import com.mindata.blockchain.socket.pbft.event.MsgPrepareEvent;
 import com.mindata.blockchain.socket.pbft.msg.VoteMsg;
 import com.mindata.blockchain.socket.pbft.msg.VotePreMsg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,8 @@ public class PreMsgQueue extends BaseMsgQueue {
 
     private ConcurrentHashMap<String, VotePreMsg> blockConcurrentHashMap = new ConcurrentHashMap<>();
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     protected void push(VoteMsg voteMsg) {
         //该队列里的是votePreMsg
@@ -35,6 +39,7 @@ public class PreMsgQueue extends BaseMsgQueue {
         //但凡是能进到该push方法的，都是通过基本校验的，但在并发情况下可能会相同number的block都进到投票队列中
         //需要对新进来的Vote信息的number进行校验，如果在比prepre阶段靠后的阶段中，已经出现了认证OK的同number的vote，则拒绝进入该队列
         if (prepareMsgQueue.hasOtherConfirm(hash, voteMsg.getNumber())) {
+            logger.info("拒绝进入Prepare阶段，hash为" + hash);
             return;
         }
         //存入Pre集合中
