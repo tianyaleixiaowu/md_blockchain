@@ -38,7 +38,7 @@ public class CommitMsgQueue extends AbstractVoteMsgQueue {
         //通过校验agree数量，来决定是否在本地生成Block
         long count = voteMsgs.stream().filter(VoteMsg::isAgree).count();
         logger.info("已经commit为true的数量为:"+ count);
-        if (count >= pbftSize() * 2 + 1) {
+        if (count >= pbftAgreeSize()) {
             Block block = preMsgQueue.findByHash(hash);
             if (block == null) {
                 return;
@@ -51,7 +51,6 @@ public class CommitMsgQueue extends AbstractVoteMsgQueue {
 
     /**
      * 新区块生成后，clear掉map中number比区块小的所有数据
-     * @param addBlockEvent
      */
     @Order(3)
     @EventListener(AddBlockEvent.class)

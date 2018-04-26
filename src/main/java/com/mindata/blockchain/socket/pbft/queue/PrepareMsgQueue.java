@@ -58,7 +58,7 @@ public class PrepareMsgQueue extends AbstractVoteMsgQueue {
             long unAgreeCount = voteMsgs.size() - agreeCount;
 
             //开始发出commit的同意or拒绝的消息
-            if (agreeCount >= pbftSize() * 2 + 1) {
+            if (agreeCount >= pbftAgreeSize()) {
                 agree(commitMsg, true);
             } else if (unAgreeCount >= pbftSize() + 1) {
                 agree(commitMsg, false);

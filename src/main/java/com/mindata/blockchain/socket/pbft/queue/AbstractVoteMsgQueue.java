@@ -89,7 +89,6 @@ public abstract class AbstractVoteMsgQueue extends BaseMsgQueue {
                 if (voteMsgConcurrentHashMap.get(key).get(0).getNumber() <= number) {
                     voteMsgConcurrentHashMap.remove(key);
                     voteStateConcurrentHashMap.remove(key);
-                    logger.info("清理过时的Vote，hash为：" + key);
                 }
             }
             return null;

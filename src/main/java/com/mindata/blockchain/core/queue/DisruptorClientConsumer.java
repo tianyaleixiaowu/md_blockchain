@@ -6,9 +6,9 @@ import com.mindata.blockchain.core.queue.base.BaseEvent;
 import com.mindata.blockchain.core.queue.base.MessageConsumer;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.BaseBody;
-import com.mindata.blockchain.socket.handler.client.*;
-import com.mindata.blockchain.socket.holder.BaseResponse;
-import com.mindata.blockchain.socket.holder.RequestResponseMap;
+import com.mindata.blockchain.socket.handler.client.FetchBlockResponseHandler;
+import com.mindata.blockchain.socket.handler.client.NextBlockResponseHandler;
+import com.mindata.blockchain.socket.handler.client.TotalBlockInfoResponseHandler;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.PacketType;
 import org.slf4j.Logger;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 import org.tio.utils.json.Json;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,9 +28,9 @@ public class DisruptorClientConsumer implements MessageConsumer {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     static {
-        handlerMap.put(PacketType.GENERATE_BLOCK_RESPONSE, new GenerateBlockResponseHandler());
         handlerMap.put(PacketType.TOTAL_BLOCK_INFO_RESPONSE, new TotalBlockInfoResponseHandler());
         handlerMap.put(PacketType.NEXT_BLOCK_INFO_RESPONSE, new NextBlockResponseHandler());
+        handlerMap.put(PacketType.FETCH_BLOCK_INFO_RESPONSE, new FetchBlockResponseHandler());
     }
 
     @Override
@@ -51,12 +50,6 @@ public class DisruptorClientConsumer implements MessageConsumer {
         if (StrUtil.equals(AppId.value, appId)) {
             //是本机
             //return;
-        }
-        String msgId = baseBody.getResponseMsgId();
-        List<BaseResponse> responseList = RequestResponseMap.get(msgId);
-        //如果回应的消息msgId key自己不曾保存过，或者已被删除，说明针对该消息已有结果，则不再处理
-        if (responseList == null) {
-            return;
         }
 
         blockHandler.handler(blockPacket, baseEvent.getChannelContext());

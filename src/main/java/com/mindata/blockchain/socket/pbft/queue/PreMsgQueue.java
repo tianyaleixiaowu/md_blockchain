@@ -86,7 +86,6 @@ public class PreMsgQueue extends BaseMsgQueue {
             for (String key : blockConcurrentHashMap.keySet()) {
                 if (blockConcurrentHashMap.get(key).getNumber() <= number) {
                     blockConcurrentHashMap.remove(key);
-                    logger.info("清理过时的Vote，hash为：" + key);
                 }
             }
             return null;

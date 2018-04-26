@@ -14,16 +14,6 @@ import org.tio.core.intf.Packet;
  * @author wuweifeng wrote on 2018/3/12.
  */
 public class BlockClientAioHandler extends AbstractAioHandler implements ClientAioHandler {
-    //private static Map<Byte, AbstractBlockHandler<?>> handlerMap = new HashMap<>();
-    //private Logger logger = LoggerFactory.getLogger(getClass());
-    //
-    //static {
-    //    handlerMap.put(PacketType.GENERATE_BLOCK_RESPONSE, new GenerateBlockResponseHandler());
-    //    handlerMap.put(PacketType.TOTAL_BLOCK_INFO_RESPONSE, new TotalBlockInfoResponseHandler());
-    //    handlerMap.put(PacketType.LAST_BLOCK_INFO_RESPONSE, new LastBlockInfoResponseHandler());
-    //    handlerMap.put(PacketType.NEXT_BLOCK_INFO_RESPONSE, new NextBlockResponseHandler());
-    //    handlerMap.put(PacketType.GENERATE_COMPLETE_RESPONSE, new GenerateCompleteResponseHandler());
-    //}
 
     @Override
     public BlockPacket heartbeatPacket() {
@@ -41,24 +31,5 @@ public class BlockClientAioHandler extends AbstractAioHandler implements ClientA
 
         //使用Disruptor来publish消息，进入队列
         ApplicationContextProvider.getBean(MessageProducer.class).publish(new BaseEvent(blockPacket, channelContext));
-
-        //BaseBody baseBody = Json.toBean(new String(blockPacket.getBody()), BaseBody.class);
-        //logger.info("收到来自于<" + baseBody.getAppId() + ">针对msg<" + baseBody.getResponseMsgId() + ">的回应");
-        //
-        //String appId = baseBody.getAppId();
-        //if (StrUtil.equals(AppId.value, appId)) {
-        //    //是本机
-        //    //return;
-        //}
-        //String msgId = baseBody.getResponseMsgId();
-        //List<BaseResponse> responseList = RequestResponseMap.get(msgId);
-        ////如果回应的消息msgId key自己不曾保存过，或者已被删除，说明针对该消息已有结果，则不再处理
-        //if (responseList == null) {
-        //    return;
-        //}
-        //
-        //Byte type = blockPacket.getType();
-        //AbstractBlockHandler<?> blockHandler = handlerMap.get(type);
-        //blockHandler.handler(blockPacket, channelContext);
     }
 }

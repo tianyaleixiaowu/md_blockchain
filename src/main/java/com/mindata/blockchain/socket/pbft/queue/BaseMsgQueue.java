@@ -19,6 +19,10 @@ public abstract class BaseMsgQueue {
     public int pbftSize() {
         return clientStarter.pbftSize();
     }
+
+    public int pbftAgreeSize() {
+        return clientStarter.pbftAgreeCount();
+    }
     /**
      * 来了新消息
      *

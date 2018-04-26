@@ -34,13 +34,13 @@ public interface PacketType {
      */
     byte TOTAL_BLOCK_INFO_RESPONSE = -3;
     /**
-     * 获取最后一个block信息
+     * 获取一个block信息
      */
-    byte LAST_BLOCK_INFO_REQUEST = 4;
+    byte FETCH_BLOCK_INFO_REQUEST = 4;
     /**
-     * 我的最后一块信息
+     * 获取一块信息响应
      */
-    byte LAST_BLOCK_INFO_RESPONSE = -4;
+    byte FETCH_BLOCK_INFO_RESPONSE = -4;
     /**
      * 获取下一个区块的信息
      */

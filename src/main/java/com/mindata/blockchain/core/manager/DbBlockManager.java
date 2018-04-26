@@ -86,6 +86,17 @@ public class DbBlockManager {
         return getBlockByHash(nextHash);
     }
 
+    public Block getNextBlockByHash(String hash) {
+        if (hash == null) {
+            return getFirstBlock();
+        }
+        String nextHash = dbStore.get(Constants.KEY_BLOCK_NEXT_PREFIX + hash);
+        if (nextHash == null) {
+            return null;
+        }
+        return getBlockByHash(nextHash);
+    }
+
     public Block getBlockByHash(String hash) {
         String blockJson = dbStore.get(hash);
         return FastJsonUtil.toBean(blockJson, Block.class);

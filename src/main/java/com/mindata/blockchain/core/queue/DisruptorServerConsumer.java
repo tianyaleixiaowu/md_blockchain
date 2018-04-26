@@ -23,7 +23,7 @@ public class DisruptorServerConsumer implements MessageConsumer {
         handlerMap.put(PacketType.GENERATE_COMPLETE_REQUEST, new GenerateCompleteRequestHandler());
         handlerMap.put(PacketType.GENERATE_BLOCK_REQUEST, new GenerateBlockRequestHandler());
         handlerMap.put(PacketType.TOTAL_BLOCK_INFO_REQUEST, new TotalBlockInfoRequestHandler());
-        handlerMap.put(PacketType.LAST_BLOCK_INFO_REQUEST, new LastBlockInfoRequestHandler());
+        handlerMap.put(PacketType.FETCH_BLOCK_INFO_REQUEST, new FetchBlockRequestHandler());
         handlerMap.put(PacketType.HEART_BEAT, new HeartBeatHandler());
         handlerMap.put(PacketType.NEXT_BLOCK_INFO_REQUEST, new NextBlockRequestHandler());
         handlerMap.put(PacketType.PBFT_VOTE, new PbftVoteHandler());

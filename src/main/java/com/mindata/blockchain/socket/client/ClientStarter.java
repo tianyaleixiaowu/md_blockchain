@@ -163,4 +163,8 @@ public class ClientStarter {
         }
         return pbft;
     }
+
+    public int pbftAgreeCount() {
+        return pbftSize() * 2 + 1;
+    }
 }
