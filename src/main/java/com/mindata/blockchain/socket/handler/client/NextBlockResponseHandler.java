@@ -24,7 +24,7 @@ public class NextBlockResponseHandler extends AbstractBlockHandler<RpcNextBlockB
     }
 
     @Override
-    public synchronized Object handler(BlockPacket packet, RpcNextBlockBody rpcBlockBody, ChannelContext channelContext) {
+    public Object handler(BlockPacket packet, RpcNextBlockBody rpcBlockBody, ChannelContext channelContext) {
         logger.info("收到来自于<" + rpcBlockBody.getAppId() + ">的回复，下一个Block hash为：" + rpcBlockBody.getHash());
 
         String hash = rpcBlockBody.getHash();
@@ -35,17 +35,6 @@ public class NextBlockResponseHandler extends AbstractBlockHandler<RpcNextBlockB
             BlockHash blockHash = new BlockHash(hash, rpcBlockBody.getPrevHash(), rpcBlockBody.getAppId());
             //此处进行搜集next block的hash，相同的hash过2f+1时可以确认
             ApplicationContextProvider.getBean(NextBlockQueue.class).push(blockHash);
-
-            //此处校验传过来的block的合法性，如果合法，则更新到本地，作为next区块
-            //CheckerManager checkerManager = ApplicationContextProvider.getBean(CheckerManager.class);
-            //RpcCheckBlockBody rpcCheckBlockBody = checkerManager.check(block);
-            ////校验通过，则存入本地DB，保存新区块
-            //if (rpcCheckBlockBody.getCode() == 0) {
-            //    ApplicationContextProvider.publishEvent(new AddBlockEvent(block));
-            //}
-            //logger.info("下一块是" + block);
-            ////继续请求下一块
-            //Aio.send(channelContext, NextBlockPacketBuilder.build());
         }
 
         return null;

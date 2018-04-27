@@ -1,8 +1,8 @@
 package com.mindata.blockchain.socket.client;
 
 import com.mindata.blockchain.ApplicationContextProvider;
-import com.mindata.blockchain.core.queue.base.BaseEvent;
-import com.mindata.blockchain.core.queue.base.MessageProducer;
+import com.mindata.blockchain.socket.distruptor.base.BaseEvent;
+import com.mindata.blockchain.socket.distruptor.base.MessageProducer;
 import com.mindata.blockchain.socket.base.AbstractAioHandler;
 import com.mindata.blockchain.socket.packet.BlockPacket;
 import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
@@ -22,14 +22,13 @@ public class BlockClientAioHandler extends AbstractAioHandler implements ClientA
     }
 
     /**
-     * server端返回的响应会先进到该方法，先做统一的预处理，然后再分发给对应的handler处理各自的<p>
-     * 这里是所有server端给响应的入口，会有性能瓶颈，我猜的，我要用Disruptor来解决性能问题
+     * server端返回的响应会先进到该方法，将消息全丢到Disruptor中
      */
     @Override
-    public void handler(Packet packet, ChannelContext channelContext) throws Exception {
+    public void handler(Packet packet, ChannelContext channelContext)  {
         BlockPacket blockPacket = (BlockPacket) packet;
 
-        //使用Disruptor来publish消息，进入队列
+        //使用Disruptor来publish消息。所有收到的消息都进入Disruptor，同BlockServerAioHandler
         ApplicationContextProvider.getBean(MessageProducer.class).publish(new BaseEvent(blockPacket, channelContext));
     }
 }

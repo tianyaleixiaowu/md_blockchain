@@ -1,4 +1,4 @@
-package com.mindata.blockchain.core.queue.base;
+package com.mindata.blockchain.socket.distruptor.base;
 
 import com.lmax.disruptor.EventFactory;
 

@@ -1,4 +1,4 @@
-package com.mindata.blockchain.core.queue.base;
+package com.mindata.blockchain.socket.distruptor.base;
 
 /**
  * @author wuweifeng wrote on 2018/4/20.

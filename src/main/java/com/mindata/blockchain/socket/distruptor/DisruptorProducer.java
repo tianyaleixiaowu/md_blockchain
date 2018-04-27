@@ -1,11 +1,12 @@
-package com.mindata.blockchain.core.queue;
+package com.mindata.blockchain.socket.distruptor;
 
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
-import com.mindata.blockchain.core.queue.base.BaseEvent;
-import com.mindata.blockchain.core.queue.base.MessageProducer;
+import com.mindata.blockchain.socket.distruptor.base.BaseEvent;
+import com.mindata.blockchain.socket.distruptor.base.MessageProducer;
 
 /**
+ * 所有客户端、server端发来的消息，都进入这里，然后publish出去，供消费者消费
  * @author wuweifeng wrote on 2018/4/20.
  */
 public class DisruptorProducer implements MessageProducer {

@@ -29,7 +29,7 @@ public class GenerateBlockRequestHandler extends AbstractBlockHandler<RpcBlockBo
     }
 
     @Override
-    public synchronized Object handler(BlockPacket packet, RpcBlockBody rpcBlockBody, ChannelContext channelContext) {
+    public Object handler(BlockPacket packet, RpcBlockBody rpcBlockBody, ChannelContext channelContext) {
         Block block = rpcBlockBody.getBlock();
         logger.info("收到来自于<" + rpcBlockBody.getAppId() + "><请求生成Block>消息，block信息为[" + block + "]");
 

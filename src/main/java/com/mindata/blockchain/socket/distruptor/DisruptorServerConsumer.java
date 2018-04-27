@@ -1,7 +1,7 @@
-package com.mindata.blockchain.core.queue;
+package com.mindata.blockchain.socket.distruptor;
 
-import com.mindata.blockchain.core.queue.base.BaseEvent;
-import com.mindata.blockchain.core.queue.base.MessageConsumer;
+import com.mindata.blockchain.socket.distruptor.base.BaseEvent;
+import com.mindata.blockchain.socket.distruptor.base.MessageConsumer;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.handler.server.*;
 import com.mindata.blockchain.socket.packet.BlockPacket;
@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 所有client发来的消息都在这里处理
  * @author wuweifeng wrote on 2018/4/20.
  */
 @Component

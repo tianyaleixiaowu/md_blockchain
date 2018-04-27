@@ -25,7 +25,7 @@ public class PbftVoteHandler extends AbstractBlockHandler<VoteBody> {
     }
 
     @Override
-    public synchronized Object handler(BlockPacket packet, VoteBody voteBody, ChannelContext channelContext) {
+    public Object handler(BlockPacket packet, VoteBody voteBody, ChannelContext channelContext) {
         VoteMsg voteMsg = voteBody.getVoteMsg();
         logger.info("收到来自于<" + voteMsg.getAppId() + "><投票>消息，投票信息为[" + voteMsg + "]");
 

@@ -29,7 +29,7 @@ public class NextBlockRequestHandler extends AbstractBlockHandler<RpcSimpleBlock
     }
 
     @Override
-    public synchronized Object handler(BlockPacket packet, RpcSimpleBlockBody rpcBlockBody, ChannelContext channelContext) {
+    public Object handler(BlockPacket packet, RpcSimpleBlockBody rpcBlockBody, ChannelContext channelContext) {
         logger.info("收到来自于<" + rpcBlockBody.getAppId() + ">的<请求下一Block>消息，请求者的block hash为：" + Json.toJson
                 (rpcBlockBody.getHash()));
         //传来的Block，如果为null，说明发起方连一个Block都没有
