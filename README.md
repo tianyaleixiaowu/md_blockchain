@@ -83,7 +83,11 @@ Block内存储的是类Sql语句。联盟间预先设定好符合业务场景需
 
 ### 简单使用说明
 
-使用方法：先启动[md_blockchain_manager项目](https://gitee.com/tianyalei/md_blockchain_manager)，然后修改application.yml里的name、appid和managerUrl和manager项目数据库里的一一对应，作为一个节点启动即可。
+使用方法：先下载[md_blockchain_manager项目](https://gitee.com/tianyalei/md_blockchain_manager)，然后导入工程里的sql数据库文件，修改application.yml数据库配置，最后启动manager项目。
+
+然后修改md_blockchain中application.yml里的name、appid和manager项目数据库里的某个值对应，作为一个节点。如果有多个节点，则某个节点都和数据库里对应，填写各节点的ip。managerUrl就是manager项目的url，让该项目能访问到manager项目。
+
+在md_blockchian项目启动时，在ClientStarter类中可见，启动时会从manager项目拉取所有节点的数据，并进行连接。如果自己的ip和appId等不在manager数据库中，则无法启动。
 
 可以通过访问localhost:8080/block?content=1来生成一个区块。正常使用时至少要启动4个节点才行，否则无法达成共识，PBFT要求2f+1个节点同意才能生成Block。为了方便测试，可以直接修改pbftSize的返回值为0，这样就能自己一个节点玩起来了。如果有多个节点，在生成Block后就会发现别的节点也会自动同步自己新生成的Block。目前代码里默认设置了一张表message，里面也只有一个字段content，相当于一个简单的区块链记事本。当有4个节点时，可以通过并发访问其中的几个来同时生成Block进行测试，看是否会分叉。还可以关停其中的一个，看其他的三个是否能达成共识（拜占庭最多容许f个节点故障，4个节点允许1个故障），恢复故障的那个，看是否能够同步其他正常节点的Block。可以进行各种测试，欢迎提bug。
 
