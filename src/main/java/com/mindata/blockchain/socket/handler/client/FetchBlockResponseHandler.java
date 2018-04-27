@@ -7,7 +7,9 @@ import com.mindata.blockchain.core.event.AddBlockEvent;
 import com.mindata.blockchain.socket.base.AbstractBlockHandler;
 import com.mindata.blockchain.socket.body.RpcBlockBody;
 import com.mindata.blockchain.socket.body.RpcCheckBlockBody;
+import com.mindata.blockchain.socket.client.PacketSender;
 import com.mindata.blockchain.socket.packet.BlockPacket;
+import com.mindata.blockchain.socket.packet.NextBlockPacketBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tio.core.ChannelContext;
@@ -41,6 +43,9 @@ public class FetchBlockResponseHandler extends AbstractBlockHandler<RpcBlockBody
             //校验通过，则存入本地DB，保存新区块
             if (rpcCheckBlockBody.getCode() == 0) {
                 ApplicationContextProvider.publishEvent(new AddBlockEvent(block));
+                //继续请求下一块
+                BlockPacket blockPacket = NextBlockPacketBuilder.build();
+                ApplicationContextProvider.getBean(PacketSender.class).sendGroup(blockPacket);
             }
         }
 
