@@ -76,10 +76,8 @@ public class ClientStarter {
                 logger.info("共有" + memberList.size() + "个成员需要连接：" + memberList.toString());
                 for (Member member : memberList) {
                     Node node = new Node(member.getIp(), Const.PORT);
-                    if (!nodes.contains(node)) {
-                        bindServerGroup(member.getIp(), Const.PORT);
-                        nodes.add(node);
-                    }
+                    //开始尝试绑定到对方开启的server
+                    bindServerGroup(node);
                 }
 
             } else {
@@ -129,20 +127,22 @@ public class ClientStarter {
     /**
      * client在此绑定多个服务器，多个服务器为一个group，将来发消息时发给一个group
      */
-    private void bindServerGroup(String ip, int port) {
-        //服务器节点
-        Node serverNode = new Node(ip, port);
-
+    private void bindServerGroup(Node serverNode) {
         try {
             AioClient aioClient = new AioClient(clientGroupContext);
-            logger.info("开始绑定" + ip + ":" + port);
-            ClientChannelContext clientChannelContext = aioClient.connect(serverNode);
-            if (clientChannelContext != null) {
-                //绑group是将要连接的各个服务器节点做为一个group
-                Aio.bindGroup(clientChannelContext, GROUP_NAME);
+            logger.info("开始绑定" + ":" + serverNode.toString());
+            ClientChannelContext clientChannelContext = aioClient.connect(serverNode, 1);
+            if (clientChannelContext == null) {
+                logger.info("绑定" + serverNode.toString() + "失败");
+                return;
             }
+            if (Aio.isInGroup(GROUP_NAME, clientChannelContext)) {
+                return;
+            }
+            //绑group是将要连接的各个服务器节点做为一个group
+            Aio.bindGroup(clientChannelContext, GROUP_NAME);
         } catch (Exception e) {
-            logger.info("绑定" + ip + "失败");
+            logger.info("异常");
         }
 
     }
@@ -154,6 +154,7 @@ public class ClientStarter {
 
     /**
      * pbft算法中拜占庭节点数量f，总节点数3f+1
+     *
      * @return f
      */
     public int pbftSize() {
