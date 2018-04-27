@@ -119,8 +119,8 @@ public class ClientStarter {
 
     @EventListener(ApplicationReadyEvent.class)
     public void fetchNextBlock() throws InterruptedException {
-        logger.info("开始群发信息获取next Block");
         Thread.sleep(6000);
+        logger.info("开始群发信息获取next Block");
         //在这里发请求，去获取group别人的新区块
         BlockPacket nextBlockPacket = NextBlockPacketBuilder.build();
         packetSender.sendGroup(nextBlockPacket);
@@ -137,8 +137,10 @@ public class ClientStarter {
             AioClient aioClient = new AioClient(clientGroupContext);
             logger.info("开始绑定" + ip + ":" + port);
             ClientChannelContext clientChannelContext = aioClient.connect(serverNode);
-            //绑group是将要连接的各个服务器节点做为一个group
-            Aio.bindGroup(clientChannelContext, GROUP_NAME);
+            if (clientChannelContext != null) {
+                //绑group是将要连接的各个服务器节点做为一个group
+                Aio.bindGroup(clientChannelContext, GROUP_NAME);
+            }
         } catch (Exception e) {
             logger.info("绑定" + ip + "失败");
         }
