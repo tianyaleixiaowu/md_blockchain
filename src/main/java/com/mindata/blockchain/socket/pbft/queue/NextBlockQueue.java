@@ -47,7 +47,7 @@ public class NextBlockQueue {
         requestMap.put(key, responses);
     }
 
-    public void add(String key, BlockHash blockHash) {
+    private void add(String key, BlockHash blockHash) {
         List<BlockHash> baseResponses = get(key);
 
         if (baseResponses == null) {
@@ -114,6 +114,10 @@ public class NextBlockQueue {
     public void push(BlockHash blockHash) {
         String wantHash = blockHash.getHash();
         String prevHash = blockHash.getPrevHash();
+        //创世块
+        if (prevHash == null) {
+            prevHash = "first_block_hash";
+        }
         //针对该hash已经处理过了
         if (dbBlockManager.getBlockByHash(wantHash) != null) {
             remove(prevHash);
