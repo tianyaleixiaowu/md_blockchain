@@ -22,6 +22,7 @@ import org.tio.client.AioClient;
 import org.tio.client.ClientChannelContext;
 import org.tio.client.ClientGroupContext;
 import org.tio.core.Aio;
+import org.tio.core.ChannelContext;
 import org.tio.core.Node;
 import org.tio.utils.lock.SetWithLock;
 
@@ -29,6 +30,8 @@ import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.stream.Collectors;
 
 import static com.mindata.blockchain.socket.common.Const.GROUP_NAME;
 
@@ -74,11 +77,14 @@ public class ClientStarter {
             if (memberData.getCode() == 0) {
                 List<Member> memberList = memberData.getMembers();
                 logger.info("共有" + memberList.size() + "个成员需要连接：" + memberList.toString());
+
+                nodes.clear();
                 for (Member member : memberList) {
                     Node node = new Node(member.getIp(), Const.PORT);
-                    //开始尝试绑定到对方开启的server
-                    bindServerGroup(node);
+                    nodes.add(node);
                 }
+                //开始尝试绑定到对方开启的server
+                bindServerGroup(nodes);
 
             } else {
                 logger.error("不是合法有效的已注册的客户端");
@@ -125,9 +131,40 @@ public class ClientStarter {
     }
 
     /**
-     * client在此绑定多个服务器，多个服务器为一个group，将来发消息时发给一个group
+     * client在此绑定多个服务器，多个服务器为一个group，将来发消息时发给一个group。
+     * 此处连接的server的ip需要和服务器端保持一致，服务器删了，这边也要踢出Group
      */
-    private void bindServerGroup(Node serverNode) {
+    private void bindServerGroup(Set<Node> serverNodes) {
+        //当前已经连接的
+        SetWithLock<ChannelContext> setWithLock = Aio.getAllChannelContexts(clientGroupContext);
+        Lock lock2 = setWithLock.getLock().readLock();
+        lock2.lock();
+        try {
+            Set<ChannelContext> set = setWithLock.getObj();
+            //已连接的节点集合
+            Set<Node> connectedNodes = set.stream().map(ChannelContext::getServerNode).collect(Collectors.toSet());
+
+            //连接新增的，删掉已在管理端不存在的
+            for (Node node : serverNodes) {
+                if (!connectedNodes.contains(node)) {
+                    connect(node);
+                }
+            }
+            //删掉已经不存在
+            for (ChannelContext channelContext : set) {
+                Node node = channelContext.getServerNode();
+                if (!serverNodes.contains(node)) {
+                    Aio.remove(channelContext, "主动关闭" + node.getIp());
+                }
+
+            }
+        } finally {
+            lock2.unlock();
+        }
+
+    }
+
+    private void connect(Node serverNode) {
         try {
             AioClient aioClient = new AioClient(clientGroupContext);
             logger.info("开始绑定" + ":" + serverNode.toString());
@@ -136,15 +173,11 @@ public class ClientStarter {
                 logger.info("绑定" + serverNode.toString() + "失败");
                 return;
             }
-            if (Aio.isInGroup(GROUP_NAME, clientChannelContext)) {
-                return;
-            }
             //绑group是将要连接的各个服务器节点做为一个group
             Aio.bindGroup(clientChannelContext, GROUP_NAME);
         } catch (Exception e) {
             logger.info("异常");
         }
-
     }
 
     public int halfGroupSize() {
